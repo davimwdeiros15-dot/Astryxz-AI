@@ -19,32 +19,19 @@ body{
     overflow: hidden;
 }
 
-/* 💻 Configuração responsiva: começa compacta para celular */
 .app{
     width: 95%;
-    max-width: 420px;
-    height: 95vh;
+    max-width: 1000px;
+    height: 90vh;
     background:#00050a; 
     border-radius:15px;
     display:flex;
-    flex-direction:column;
+    flex-direction:row;
     overflow:hidden;
     border:1px solid #00e5ff11; 
     box-shadow: 0 0 0px rgba(0, 229, 255, 0);
-    transition: all 0.5s ease;
+    transition: all 0.8s ease;
     position: relative;
-}
-
-/* 🖥️ ADAPTAÇÃO AUTOMÁTICA PARA TELA CHEIA NO PC */
-@media (min-width: 768px) {
-    .app {
-        max-width: 90%;      
-        width: 1200px;        
-        height: 85vh;         
-        border-radius: 20px;  
-        border-color: #00e5ff22;
-        box-shadow: 0 0 30px rgba(0, 229, 255, 0.1); 
-    }
 }
 
 .standby-screen {
@@ -116,7 +103,7 @@ button:hover { background: #80f2ff; transform: scale(1.02); }
 .btn-mic { background: #002233; color: #00e5ff; border: 1px solid #00e5ff33; }
 .btn-mic.listening { background: #ff3366; color: white; animation: pulse 1.5s infinite; border-color: transparent; }
 
-.devPanel{ display:none; padding:20px; background:#000f1a; border-left:1px solid #00e5ff33; width: 280px; box-sizing: border-box; overflow-y: auto; position: absolute; right: 0; top: 0; height: 100%; z-index: 200; }
+.devPanel{ display:none; padding:20px; background:#000f1a; border-left:1px solid #00e5ff33; width: 280px; box-sizing: border-box; overflow-y: auto; }
 .devPanel h3 { margin-top: 0; color: #ff3366; }
 .devPanel button { width: 100%; margin-top: 10px; background: #ff3366; color: white; }
 </style>
@@ -172,9 +159,7 @@ const title = document.getElementById("title");
 const statusText = document.getElementById("statusText");
 const micBtn = document.getElementById("micBtn");
 
-// 🔑 Sua chave está salva de forma segura e fixa aqui:
-let API_KEY = "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";
-
+let API_KEY = "";
 let isSystemActive = false;
 let recognition;
 let isListening = false;
@@ -182,6 +167,7 @@ let isListening = false;
 let audioContext, analyser, microphone, javascriptNode;
 const CLAP_THRESHOLD = 45; 
 
+// Vincula o canal de som e aguarda a palma
 function initAudio() {
     if (audioContext) return;
     
@@ -214,6 +200,9 @@ function initAudio() {
     });
 }
 
+//////////////////////////////////////////////////
+// 🎤 RECONHECIMENTO DE VOZ (SPEECH-TO-TEXT)
+//////////////////////////////////////////////////
 function initSpeechRecognition() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) return;
@@ -232,7 +221,7 @@ function initSpeechRecognition() {
     recognition.onresult = (event) => {
         const textResult = event.results[0][0].transcript;
         input.value = textResult;
-        run(); 
+        run(); // Processa automaticamente após o término da fala
     };
 
     recognition.onend = () => {
@@ -276,6 +265,7 @@ function add(text,type){
     chat.scrollTop = chat.scrollHeight;
 }
 
+// Envia comandos de abertura ao arquivo main.js do Electron
 function openApp(app){
     app = app.toLowerCase().replace("abrir ", "").trim();
     add("🚀 Invocando software local: " + app, "ai");
@@ -289,20 +279,11 @@ function openApp(app){
 }
 
 async function askAI(msg){
-    // Corrigido: Agora a verificação só bloqueia se o campo estiver realmente vazio ou não configurado
-    if(!API_KEY || API_KEY === "SUA_API_KEY_AQUI" || API_KEY.trim() === "") {
-        return "⚠️ Nenhuma API KEY configurada no código ou no painel Dev.";
-    }
-    
+    if(!API_KEY) return "⚠️ Nenhuma API KEY configurada no painel Dev.";
     try{
         const res = await fetch("https://openrouter.ai/api/v1/chat/completions",{
             method:"POST",
-            headers:{
-                "Content-Type":"application/json",
-                "Authorization":`Bearer ${API_KEY}`,
-                "HTTP-Referer":"http://localhost",
-                "X-Title":"NOX AI"
-            },
+            headers:{"Content-Type":"application/json","Authorization":`Bearer ${API_KEY}`,"HTTP-Referer":"http://localhost","X-Title":"NOX AI"},
             body:JSON.stringify({
                 model:"openai/gpt-3.5-turbo",
                 messages:[
@@ -312,8 +293,8 @@ async function askAI(msg){
             })
         });
         const data = await res.json();
-        return data.choices?.[0]?.message?.content || "Sem resposta do servidor da inteligência artificial.";
-    }catch(e){ return "Erro de conexão com o servidor."; }
+        return data.choices?.[0]?.message?.content || "Sem resposta.";
+    }catch(e){ return "Erro de conexão."; }
 }
 
 async function run(){
@@ -323,6 +304,7 @@ async function run(){
     add(text,"user");
     input.value = "";
 
+    // Verifica se o usuário quer executar um programa no PC
     if(text.toLowerCase().startsWith("abrir ")){
         openApp(text);
         return;
@@ -340,7 +322,7 @@ function openDev(){
     nameInput.value = title.innerText;
 }
 
-// Atualiza a chave se você mudar pelo painel secreto
+// Salva e atualiza o logo 3D
 function saveDev(){
     API_KEY = apiInput.value;
     title.innerText = nameInput.value;
