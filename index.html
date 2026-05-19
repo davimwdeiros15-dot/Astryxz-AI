@@ -104,6 +104,95 @@ body::after {
 
 body.active .standby-screen { opacity: 0; visibility: hidden; pointer-events: none; }
 
+/* TELA DE LOGIN / CADASTRO LOCAL */
+.auth-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(10, 7, 15, 0.95);
+    backdrop-filter: blur(20px);
+    z-index: 2500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.auth-card {
+    background: rgba(25, 18, 36, 0.7);
+    border: 1px solid rgba(157, 78, 221, 0.3);
+    padding: 35px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 0 30px rgba(157, 78, 221, 0.15);
+    text-align: center;
+}
+
+.auth-card h2 {
+    font-size: 22px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    color: #e2d7ff;
+    text-shadow: 0 0 8px rgba(157, 78, 221, 0.5);
+}
+
+.auth-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+    text-align: left;
+}
+
+.auth-group label {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #b39ddb;
+    letter-spacing: 1px;
+}
+
+.auth-input {
+    background: rgba(15, 10, 22, 0.8);
+    border: 1px solid rgba(157, 78, 221, 0.3);
+    padding: 14px;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 15px;
+    outline: none;
+}
+
+.auth-input:focus {
+    border-color: #9d4edd;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 14px;
+    background: #4a148c;
+    border: 1px solid #7c4dff;
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 10px;
+}
+
+.auth-btn:hover {
+    background: #6200ea;
+    box-shadow: 0 0 15px rgba(124, 77, 255, 0.4);
+}
+
+.auth-toggle-text {
+    font-size: 13px;
+    color: #b39ddb;
+    margin-top: 20px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 /* BARRA LATERAL */
 .sidebar {
     width: 320px;
@@ -234,20 +323,6 @@ body.active .standby-screen { opacity: 0; visibility: hidden; pointer-events: no
     color: #fff;
 }
 
-/* Estilo do Botão Google customizado */
-.btn-google {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    font-weight: 500;
-}
-.btn-google:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
-}
-.btn-google svg {
-    width: 16px;
-    height: 16px;
-}
-
 .sidebar-credits {
     border-top: 1px solid rgba(141, 75, 230, 0.15);
     margin-top: 10px;
@@ -362,18 +437,6 @@ header {
     border-bottom-left-radius: 4px;
 }
 
-/* Mensagem de alerta do sistema */
-.system-alert {
-    align-self: center;
-    background: rgba(239, 83, 80, 0.2);
-    border: 1px solid #ef5350;
-    color: #ff9492;
-    font-size: 14px;
-    text-align: center;
-    max-width: 85%;
-    border-radius: 10px;
-}
-
 .bottom {
     padding: 30px 40px;
     background: rgba(13, 11, 18, 0.6);
@@ -399,7 +462,6 @@ header {
     box-shadow: 0 0 18px rgba(157, 78, 221, 0.25);
 }
 
-/* Estilo visual para input desativado antes do login */
 .input-wrapper.blocked {
     background: rgba(20, 15, 25, 0.5);
     border-color: rgba(141, 75, 230, 0.1);
@@ -446,7 +508,7 @@ input:disabled { cursor: not-allowed; color: #5a4f73; }
     transition: all 0.2s;
 }
 .btn-send:hover { background: #6200ea; box-shadow: 0 0 12px rgba(124, 77, 255, 0.5); }
-.btn-send:disabled { background: #1e1330; border-color: #311b92; color: #5a4f73; cursor: not-allowed; box-shadow: none !important; }
+.btn-send:disabled { background: #1e1330; border-color: #311b92; color: #5a4f73; cursor: not-allowed; }
 
 .sidebar-overlay {
     display: none;
@@ -481,6 +543,22 @@ input:disabled { cursor: not-allowed; color: #5a4f73; }
         <div class="standby-text" id="statusText">SISTEMA ADORMECIDO<br><span style="font-size:12px; color:#9d4edd; font-weight: bold;">Clique no núcleo para iniciar</span></div>
     </div>
 
+    <div class="auth-overlay" id="authOverlay" style="display: none;">
+        <div class="auth-card">
+            <h2 id="authTitle">Acessar Nox AI</h2>
+            <div class="auth-group">
+                <label for="authNick">Nickname / Operador</label>
+                <input type="text" id="authNick" class="auth-input" placeholder="Digite seu nick...">
+            </div>
+            <div class="auth-group">
+                <label for="authPass">Senha de Acesso</label>
+                <input type="password" id="authPass" class="auth-input" placeholder="Digite sua senha...">
+            </div>
+            <button class="auth-btn" id="authSubmitBtn" onclick="submitAuthForm()">Entrar no Terminal</button>
+            <div class="auth-toggle-text" id="authToggleLink" onclick="toggleAuthMode()">Não tem uma conta? Cadastre-se</div>
+        </div>
+    </div>
+
     <div class="sidebar" id="sidebar">
         <button class="new-chat-btn" onclick="clearChatMobile()">
             <span>📝</span> Nova conversa
@@ -488,9 +566,7 @@ input:disabled { cursor: not-allowed; color: #5a4f73; }
 
         <div class="section-title">Conversas Recentes</div>
         
-        <div class="conversations-section" id="historyList">
-            <div id="no-auth-notice" style="font-size: 12px; color: #7e6f99; padding: 10px; text-align: center;">Faça login para salvar suas conversas na nuvem.</div>
-        </div>
+        <div class="conversations-section" id="historyList"></div>
 
         <div class="sidebar-widgets">
             <div class="widget-text">
@@ -507,16 +583,7 @@ input:disabled { cursor: not-allowed; color: #5a4f73; }
             <button class="footer-btn" onclick="configureOpenRouterKey()" style="background: rgba(157, 78, 221, 0.1); border: 1px solid rgba(157, 78, 221, 0.25);">
                 <span>🔑</span> Configurar API Key
             </button>
-            
-            <button class="footer-btn btn-google" id="authBtn" onclick="handleAuth()">
-                <svg viewBox="0 0 24 24" id="google-icon">
-                    <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3A11.934 11.934 0 0 0 12 0C7.305 0 3.227 2.56 1.05 6.336l4.216 3.429z"/>
-                    <path fill="#4285F4" d="M23.755 12.273c0-.818-.073-1.609-.209-2.373H12v4.509h6.591a5.64 5.64 0 0 1-2.445 3.709l4.136 3.209c2.418-2.227 3.81-5.509 3.81-9.354z"/>
-                    <path fill="#FBBC05" d="M5.266 14.235L1.05 17.664A11.934 11.934 0 0 0 12 24c3.236 0 5.955-1.073 7.945-2.909l-4.136-3.209c-1.155.773-2.627 1.236-4.218 1.236-3.182 0-5.882-2.145-6.845-5.027z"/>
-                    <path fill="#34A853" d="M1.05 6.336C.382 7.99 0 9.79 0 11.664c0 1.873.382 3.673 1.05 5.327l5.105-3.955A7.027 7.027 0 0 1 4.909 12c0-1.136.273-2.218.745-3.182L1.05 6.336z"/>
-                </svg>
-                <span id="authBtnText">Entrar com o Google</span>
-            </button>
+            <button class="footer-btn" onclick="logoutLocal()" style="color: #b39ddb;">🚪 Desconectar Nick</button>
             <button class="footer-btn" onclick="turnOffMobile()" style="color: #ff8a8a;">🔌 Desligar sistema</button>
         </div>
 
@@ -538,202 +605,171 @@ input:disabled { cursor: not-allowed; color: #5a4f73; }
                 <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
                 <h1 class="logo-interface" id="title">NOX AI</h1>
             </div>
-            <div class="header-subtitle" id="userSubtitle">Autenticação Requerida</div>
+            <div class="header-subtitle" id="userSubtitle">Acesso Restrito</div>
         </header>
 
         <div class="chat" id="chat"></div>
 
         <div class="bottom">
             <div class="input-wrapper blocked" id="inputWrapper">
-                <input id="input" placeholder="Faça login com o Google para desbloquear o terminal..." disabled />
+                <input id="input" placeholder="Faça login para desbloquear o terminal..." disabled />
                 <button id="micBtn" class="btn-mic" onclick="toggleSpeech()" disabled>🎙️</button>
                 <button id="sendBtn" class="btn-send" onclick="run()" disabled>➤</button>
             </div>
         </div>
     </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, signInWithRedirect, GoogleAuthProvider, signOut, onAuthStateChanged, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-// Configurações do Firebase - CHAVE PÚBLICA (Segura com as regras do Firestore)
-const firebaseConfig = {
-    apiKey: "AIzaSyCew7kG_h5PFFr35E2c-Dsainvt1AkImsY",
-    authDomain: "nox-ai-570fd.firebaseapp.com",
-    projectId: "nox-ai-570fd",
-    storageBucket: "nox-ai-570fd.firebasestorage.app",
-    messagingSenderId: "221325042813",
-    appId: "1:221325042813:web:af839bc5cc05a21860bd14",
-    measurementId: "G-BFWQG7F7NC"
-};
-
-// Inicializações do Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
-
-let currentUser = null;
-let unsubscribeSnapshot = null;
-
-const authBtnText = document.getElementById("authBtnText");
-const userSubtitle = document.getElementById("userSubtitle");
-const noAuthNotice = document.getElementById("no-auth-notice");
-
-window.handleAuth = async function() {
-    if (!currentUser) {
-        try {
-            await signInWithRedirect(auth, provider);
-        } catch (error) {
-            console.error("Erro ao iniciar login por redirecionamento:", error);
-            alert("Não foi possível iniciar a autenticação. Verifique sua conexão.");
-        }
-    } else {
-        if(confirm("Deseja desconectar sua conta do Google?")) {
-            signOut(auth);
-        }
-    }
-}
-
-getRedirectResult(auth).then((result) => {
-    if (result?.user) {
-        console.log("Login efetuado via redirect com sucesso:", result.user.displayName);
-    }
-}).catch((error) => {
-    console.error("Erro ao processar retorno do redirecionamento:", error);
-});
-
-// Observador do Estado de Login - TRAVADO APENAS PARA SEU E-MAIL
-onAuthStateChanged(auth, (user) => {
-    currentUser = user;
-
-    if (user) {
-        // SUBSTITUA ABAIXO PELO SEU EMAIL REAL DO GOOGLE PARA DAR ACESSO
-        const emailAutorizado = "davimwdeiros15@gmail.com"; 
-
-        if (user.email === emailAutorizado) {
-            window.isUserLoggedIn = true;
-            authBtnText.innerText = "Desconectar Conta";
-            userSubtitle.innerText = `Operador: ${user.displayName}`;
-            if(noAuthNotice) noAuthNotice.style.display = 'none';
-            
-            window.setChatLockState(false); 
-            listenToConversations(user.uid);
-        } else {
-            alert("ACESSO NEGADO: Este terminal é restrito ao Operador principal.");
-            signOut(auth).then(() => {
-                window.isUserLoggedIn = false;
-                window.setChatLockState(true);
-            });
-        }
-    } else {
-        window.isUserLoggedIn = false;
-        authBtnText.innerText = "Entrar com o Google";
-        userSubtitle.innerText = "Acesso Convidado";
-        const historyList = document.getElementById("historyList");
-        if(historyList) {
-            historyList.innerHTML = '<div id="no-auth-notice" style="font-size: 12px; color: #7e6f99; padding: 10px; text-align: center;">Faça login para salvar suas conversas na nuvem.</div>';
-        }
-        
-        window.setChatLockState(true); 
-        if (unsubscribeSnapshot) unsubscribeSnapshot();
-    }
-});
-
-function listenToConversations(uid) {
-    if (unsubscribeSnapshot) unsubscribeSnapshot();
-    const historyList = document.getElementById("historyList");
-
-    const q = query(
-        collection(db, "conversas_nox"),
-        where("userId", "==", uid),
-        orderBy("timestamp", "desc")
-    );
-
-    unsubscribeSnapshot = onSnapshot(q, (snapshot) => {
-        if(!historyList) return;
-        historyList.innerHTML = "";
-        if(snapshot.empty) {
-            historyList.innerHTML = '<div style="font-size: 12px; color: #7e6f99; padding: 10px; text-align: center;">Nenhum histórico encontrado.</div>';
-            return;
-        }
-        
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const item = document.createElement("button");
-            item.className = "history-item";
-            item.innerText = data.userInput;
-            item.onclick = () => {
-                document.querySelectorAll('.history-item').forEach(el => el.classList.remove('selected'));
-                item.classList.add('selected');
-                
-                const chat = document.getElementById("chat");
-                if(chat) {
-                    chat.innerHTML = "";
-                    window.addMessageToScreen(data.userInput, "user");
-                    window.addMessageToScreen(data.aiOutput, "ai");
-                }
-                if(window.innerWidth <= 768) window.toggleSidebar();
-            };
-            historyList.appendChild(item);
-        });
-    }, (error) => {
-        console.error("Aviso de sincronização do histórico:", error);
-    });
-}
-
-window.saveConversationToCloud = async function(userInput, aiOutput) {
-    if (!currentUser) return;
-    try {
-        await addDoc(collection(db, "conversas_nox"), {
-            userId: currentUser.uid,
-            userInput: userInput,
-            aiOutput: aiOutput,
-            timestamp: new Date()
-        });
-    } catch (e) {
-        console.error("Erro ao salvar dados na nuvem (Verifique as regras do Firestore):", e);
-    }
-}
-</script>
-
 <script>
-// Lógica de Controle da Interface do Chat
 const chat = document.getElementById("chat");
 const input = document.getElementById("input");
 const title = document.getElementById("title");
 const statusText = document.getElementById("statusText");
 const micBtn = document.getElementById("micBtn");
 const sendBtn = document.getElementById("sendBtn");
+const historyList = document.getElementById("historyList");
+const userSubtitle = document.getElementById("userSubtitle");
 const inputWrapper = document.getElementById("inputWrapper");
+
+const authOverlay = document.getElementById("authOverlay");
+const authTitle = document.getElementById("authTitle");
+const authNick = document.getElementById("authNick");
+const authPass = document.getElementById("authPass");
+const authSubmitBtn = document.getElementById("authSubmitBtn");
+const authToggleLink = document.getElementById("authToggleLink");
 
 let isSystemActive = false;
 let recognition;
 let isListening = false;
-window.isUserLoggedIn = false; 
+let localHistory = [];
+let isSignUpMode = false;
+let loggedUser = null;
 
-// Função Segura: Gerencia a chave OpenRouter salva localmente no seu computador
+// NOVA TRAVA DE SEGURANÇA: Filtro de termos ofensivos / palavrões
+const badWords = ["porra", "caralho", "merda", "puta", "viado", "fdp", "corno", "bosta", "cacete", "vtnm"];
+
+function containsBadWords(text) {
+    const cleanText = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return badWords.some(word => cleanText.includes(word));
+}
+
 window.getSecureApiKey = function() {
     return localStorage.getItem("nox_ai_secure_key") || "";
 }
 
 window.configureOpenRouterKey = function() {
     const currentKey = window.getSecureApiKey();
-    const newKey = prompt("Insira sua OpenRouter API Key (Ficará guardada em segurança no seu navegador):", currentKey);
+    const newKey = prompt("Insira sua OpenRouter API Key:", currentKey);
     if (newKey !== null) {
         localStorage.setItem("nox_ai_secure_key", newKey.trim());
         alert("Chave de API salva com sucesso!");
     }
 }
 
-window.setChatLockState = function(isBlocked) {
+function checkSession() {
+    const savedUser = localStorage.getItem("nox_active_user");
+    if (savedUser) {
+        loginSuccess(savedUser);
+    } else {
+        showAuthForm();
+    }
+}
+
+function showAuthForm() {
+    if(!isSystemActive) return;
+    authOverlay.style.display = "flex";
+    setChatLockState(true);
+}
+
+function toggleAuthMode() {
+    isSignUpMode = !isSignUpMode;
+    if (isSignUpMode) {
+        authTitle.innerText = "Criar Nova Conta";
+        authSubmitBtn.innerText = "Cadastrar e Entrar";
+        authToggleLink.innerText = "Já tem uma conta? Faça Login";
+    } else {
+        authTitle.innerText = "Acessar Nox AI";
+        authSubmitBtn.innerText = "Entrar no Terminal";
+        authToggleLink.innerText = "Não tem uma conta? Cadastre-se";
+    }
+    authNick.value = "";
+    authPass.value = "";
+}
+
+function submitAuthForm() {
+    const nick = authNick.value.trim();
+    const pass = authPass.value.trim();
+
+    if (!nick || !pass) {
+        alert("Preencha todos os campos!");
+        return;
+    }
+
+    if (containsBadWords(nick)) {
+        alert("🔒 Erro de Protocolo: Uso de linguagem imprópria detectado no Nickname!");
+        authNick.value = "";
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("nox_registered_users")) || {};
+
+    if (isSignUpMode) {
+        if (users[nick]) {
+            alert("Este Nickname já está em uso!");
+            return;
+        }
+        users[nick] = pass;
+        localStorage.setItem("nox_registered_users", JSON.stringify(users));
+        alert("Conta criada com sucesso!");
+        loginSuccess(nick);
+    } else {
+        if (users[nick] && users[nick] === pass) {
+            loginSuccess(nick);
+        } else {
+            alert("Nickname ou Senha incorretos.");
+        }
+    }
+}
+
+function loginSuccess(nick) {
+    loggedUser = nick;
+    localStorage.setItem("nox_active_user", nick); 
+    authOverlay.style.display = "none";
+    userSubtitle.innerText = `Operador: ${nick}`;
+    setChatLockState(false);
+    
+    localHistory = JSON.parse(localStorage.getItem(`history_${nick}`)) || [];
+    renderHistoryList();
+}
+
+function logoutLocal() {
+    localStorage.removeItem("nox_active_user");
+    loggedUser = null;
+    userSubtitle.innerText = "Acesso Restrito";
+    authNick.value = "";
+    authPass.value = "";
+    if(isSignUpMode) toggleAuthMode();
+    showAuthForm();
+}
+
+function forceSecurityDisconnect() {
+    alert("❌ CONEXÃO ENCERRADA:\nUso de termos ofensivos detectado no terminal. O seu usuário foi desconectado por violar as regras do sistema.");
+    localStorage.removeItem("nox_active_user");
+    loggedUser = null;
+    userSubtitle.innerText = "Acesso Restrito";
+    authNick.value = "";
+    authPass.value = "";
+    input.value = "";
+    if(isSignUpMode) toggleAuthMode();
+    showAuthForm();
+}
+
+function setChatLockState(isBlocked) {
     if (isBlocked) {
         inputWrapper.classList.add("blocked");
         input.disabled = true;
         micBtn.disabled = true;
         sendBtn.disabled = true;
-        input.placeholder = "Faça login com o Google para desbloquear o terminal...";
+        input.placeholder = "Faça login para desbloquear o terminal...";
     } else {
         inputWrapper.classList.remove("blocked");
         input.disabled = false;
@@ -744,7 +780,7 @@ window.setChatLockState = function(isBlocked) {
 }
 
 function initSpeechRecognition() {
-    const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+    const SpeechRecognition = window.webkitSpeechRecognition || window.Recognition;
     if (!SpeechRecognition) return;
 
     recognition = new SpeechRecognition();
@@ -776,12 +812,6 @@ function toggleSidebar() {
     document.body.classList.toggle("sidebar-open");
 }
 
-function focusInputMobile() {
-    if(!window.isUserLoggedIn) return;
-    input.focus();
-    if(window.innerWidth <= 768) toggleSidebar();
-}
-
 function clearChatMobile() {
     clearChat();
     if(window.innerWidth <= 768) toggleSidebar();
@@ -803,7 +833,7 @@ setInterval(updateWidgetTime, 1000);
 updateWidgetTime();
 
 function toggleSpeech() {
-    if (!window.isUserLoggedIn) return showAuthAlert();
+    if (!loggedUser) return;
     if (!recognition) return alert("Reconhecimento de voz indisponível.");
     if (isListening) { recognition.stop(); } else { recognition.start(); }
 }
@@ -812,14 +842,18 @@ function turnOn() {
     isSystemActive = true;
     document.body.classList.add("active");
     chat.innerHTML = ""; 
+    
+    checkSession();
+
     setTimeout(() => { 
-        window.addMessageToScreen("Nox Ai ligada. Por favor, certifique-se de realizar a autenticação para acessar os servidores principais.", "ai"); 
+        if (loggedUser) window.addMessageToScreen("Nox AI ligada. Terminal ativo e pronto para comandos.", "ai"); 
     }, 600);
 }
 
 function turnOff() {
     isSystemActive = false;
     document.body.classList.remove("active");
+    authOverlay.style.display = "none";
     statusText.innerHTML = "SISTEMA APAGADO<br><span style='color:#c090f9; font-weight:bold;'>Clique no núcleo para retornar</span>";
 }
 
@@ -833,15 +867,36 @@ window.addMessageToScreen = function(text, type) {
     chat.scrollTop = chat.scrollHeight;
 }
 
-function showAuthAlert() {
-    window.addMessageToScreen("❌ NEGADO: Autenticação do Google obrigatória para interagir com a inteligência artificial.", "system-alert");
-}
-
 function clearChat() {
     chat.innerHTML = "";
     window.addMessageToScreen("Nova sessão iniciada. Nox AI pronta.", "ai");
     input.value = "";
-    if(window.isUserLoggedIn) input.focus();
+    if(loggedUser) input.focus();
+}
+
+function renderHistoryList() {
+    if (!historyList) return;
+    historyList.innerHTML = "";
+    if (!loggedUser || localHistory.length === 0) {
+        historyList.innerHTML = '<div style="font-size: 12px; color: #7e6f99; padding: 10px; text-align: center;">Nenhuma conversa salva neste perfil.</div>';
+        return;
+    }
+
+    localHistory.forEach((data, index) => {
+        const item = document.createElement("button");
+        item.className = "history-item";
+        item.innerText = data.userInput;
+        item.onclick = () => {
+            document.querySelectorAll('.history-item').forEach(el => el.classList.remove('selected'));
+            item.classList.add('selected');
+            
+            chat.innerHTML = "";
+            window.addMessageToScreen(data.userInput, "user");
+            window.addMessageToScreen(data.aiOutput, "ai");
+            if(window.innerWidth <= 768) toggleSidebar();
+        };
+        historyList.appendChild(item);
+    });
 }
 
 async function askAI(msg){
@@ -871,14 +926,16 @@ async function askAI(msg){
 }
 
 async function run(){
-    if (!window.isUserLoggedIn) {
-        showAuthAlert();
-        input.value = "";
-        return;
-    }
+    if(!loggedUser) return;
 
     let text = input.value.trim();
     if(!text) return;
+
+    // Checagem de segurança ativa no input de texto antes do processamento
+    if (containsBadWords(text)) {
+        forceSecurityDisconnect();
+        return;
+    }
 
     window.addMessageToScreen(text, "user");
     input.value = "";
@@ -886,9 +943,9 @@ async function run(){
     let aiResponse = await askAI(text);
     window.addMessageToScreen(aiResponse, "ai");
 
-    if(typeof window.saveConversationToCloud === "function"){
-        window.saveConversationToCloud(text, aiResponse);
-    }
+    localHistory.unshift({ userInput: text, aiOutput: aiResponse });
+    localStorage.setItem(`history_${loggedUser}`, JSON.stringify(localHistory));
+    renderHistoryList();
 }
 </script>
 </body>
