@@ -553,15 +553,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Configurações Reais extraídas do seu painel do Firebase
+// Configurações Atualizadas do seu painel do Firebase (image_086faf.png)
 const firebaseConfig = {
     apiKey: "AIzaSyCew7kG_h5PFFr35E2c-Dsainvt1AkImsY",
     authDomain: "nox-ai-570fd.firebaseapp.com",
     projectId: "nox-ai-570fd",
     storageBucket: "nox-ai-570fd.firebasestorage.app",
     messagingSenderId: "221325042813",
-    appId: "1:221325042813:web:af839bc5cc05a21860bd14",
-    measurementId: "G-BFWQG7F7NC"
+    appId: "1:221325042813:web:596a25b484e34f9260bd14",
+    measurementId: "G-ZZY3ZXMZWS"
 };
 
 // Inicializações do Firebase
@@ -585,7 +585,7 @@ window.handleAuth = async function() {
             await signInWithPopup(auth, provider);
         } catch (error) {
             console.error("Erro na autenticação:", error);
-            alert("Falha no login com o Google. Certifique-se de que está acessando por meio de um servidor local (HTTP) e que cadastrou o domínio corretamente.");
+            alert("Falha no login com o Google. Certifique-se de que cadastrou o domínio 'davimwdeiros15-dot.github.io' nas configurações do Firebase Authentication.");
         }
     } else {
         if(confirm("Deseja desconectar sua conta do Google?")) {
@@ -696,7 +696,7 @@ window.setChatLockState = function(isBlocked) {
         input.disabled = true;
         micBtn.disabled = true;
         sendBtn.disabled = true;
-        input.placeholder = "Faça login com o Google para desbloquear o terminal...";
+        input.placeholder = "Faça login com o Google para desbloquear o terminal..."
     } else {
         inputWrapper.classList.remove("blocked");
         input.disabled = false;
@@ -793,7 +793,7 @@ window.addMessageToScreen = function(text, type) {
     chat.scrollTop = chat.scrollHeight;
 }
 
-// Alerta visual caso tentem trapacear a trava
+// Alerta visual caso tentem enviar mensagens sem login
 function showAuthAlert() {
     window.addMessageToScreen("❌ NEGADO: Autenticação do Google obrigatória para interagir com a inteligência artificial.", "system-alert");
 }
