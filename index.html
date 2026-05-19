@@ -172,7 +172,7 @@ const title = document.getElementById("title");
 const statusText = document.getElementById("statusText");
 const micBtn = document.getElementById("micBtn");
 
-// 🔑 APAGUE O TEXTO ABAIXO E COLE A SUA CHAVE SK-OR DA OPENROUTER ENTRE AS ASPAS:
+// 🔑 Sua chave está salva de forma segura e fixa aqui:
 let API_KEY = "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";
 
 let isSystemActive = false;
@@ -289,7 +289,11 @@ function openApp(app){
 }
 
 async function askAI(msg){
-    if(!API_KEY || API_KEY === "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") return "⚠️ Nenhuma API KEY configurada no código ou no painel Dev.";
+    // Corrigido: Agora a verificação só bloqueia se o campo estiver realmente vazio ou não configurado
+    if(!API_KEY || API_KEY === "SUA_API_KEY_AQUI" || API_KEY.trim() === "") {
+        return "⚠️ Nenhuma API KEY configurada no código ou no painel Dev.";
+    }
+    
     try{
         const res = await fetch("https://openrouter.ai/api/v1/chat/completions",{
             method:"POST",
@@ -308,8 +312,8 @@ async function askAI(msg){
             })
         });
         const data = await res.json();
-        return data.choices?.[0]?.message?.content || "Sem resposta.";
-    }catch(e){ return "Erro de conexão."; }
+        return data.choices?.[0]?.message?.content || "Sem resposta do servidor da inteligência artificial.";
+    }catch(e){ return "Erro de conexão com o servidor."; }
 }
 
 async function run(){
@@ -336,6 +340,7 @@ function openDev(){
     nameInput.value = title.innerText;
 }
 
+// Atualiza a chave se você mudar pelo painel secreto
 function saveDev(){
     API_KEY = apiInput.value;
     title.innerText = nameInput.value;
