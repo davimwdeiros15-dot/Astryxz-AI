@@ -13,7 +13,7 @@
     padding: 0;
 }
 
-/* Customização da barra de rolagem para combinar com o tema roxo */
+/* Customização da barra de rolagem */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -40,7 +40,6 @@ body {
     position: relative;
 }
 
-/* Container para a imagem de fundo com efeito Matrix Roxa */
 body::before {
     content: "";
     position: absolute;
@@ -53,7 +52,6 @@ body::before {
     z-index: -1;
 }
 
-/* Camada extra de degradê para suavizar o fundo */
 body::after {
     content: "";
     position: absolute;
@@ -62,7 +60,7 @@ body::after {
     z-index: -1;
 }
 
-/* Tela de Standby Futurista Minimalista */
+/* Tela de Standby */
 .standby-screen {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
@@ -106,7 +104,7 @@ body::after {
 
 body.active .standby-screen { opacity: 0; visibility: hidden; pointer-events: none; }
 
-/* BARRA LATERAL - Efeito de vidro escurecido roxo */
+/* BARRA LATERAL */
 .sidebar {
     width: 320px;
     background: rgba(15, 12, 22, 0.75);
@@ -122,7 +120,6 @@ body.active .standby-screen { opacity: 0; visibility: hidden; pointer-events: no
     z-index: 2000;
 }
 
-/* Botão Nova Conversa no Topo */
 .new-chat-btn {
     width: 100%;
     padding: 14px;
@@ -145,7 +142,6 @@ body.active .standby-screen { opacity: 0; visibility: hidden; pointer-events: no
     box-shadow: 0 0 12px rgba(157, 78, 221, 0.3);
 }
 
-/* Seção de Lembrete de Conversas com Scroll Independente */
 .conversations-section {
     flex: 1;
     overflow-y: auto;
@@ -166,7 +162,6 @@ body.active .standby-screen { opacity: 0; visibility: hidden; pointer-events: no
     opacity: 0.8;
 }
 
-/* Itens das conversas anteriores */
 .history-item {
     width: 100%;
     padding: 12px 14px;
@@ -193,7 +188,6 @@ body.active .standby-screen { opacity: 0; visibility: hidden; pointer-events: no
     font-weight: 500;
 }
 
-/* Área de Widgets menores embutidos na lateral */
 .sidebar-widgets {
     border-top: 1px solid rgba(141, 75, 230, 0.2);
     padding-top: 15px;
@@ -211,7 +205,6 @@ body.active .standby-screen { opacity: 0; visibility: hidden; pointer-events: no
     opacity: 0.9;
 }
 
-/* Rodapé do Menu Lateral - Configurações e Ajuda */
 .sidebar-footer {
     border-top: 1px solid rgba(141, 75, 230, 0.2);
     padding-top: 15px;
@@ -241,7 +234,20 @@ body.active .standby-screen { opacity: 0; visibility: hidden; pointer-events: no
     color: #fff;
 }
 
-/* Área de Créditos */
+/* Estilo do Botão Google customizado */
+.btn-google {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    font-weight: 500;
+}
+.btn-google:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+.btn-google svg {
+    width: 16px;
+    height: 16px;
+}
+
 .sidebar-credits {
     border-top: 1px solid rgba(141, 75, 230, 0.15);
     margin-top: 10px;
@@ -262,18 +268,10 @@ body.active .standby-screen { opacity: 0; visibility: hidden; pointer-events: no
     transition: color 0.2s;
     font-weight: 500;
 }
+.credits-link:hover { color: #ffffff; }
+.credits-link svg { width: 14px; height: 14px; fill: currentColor; }
 
-.credits-link:hover {
-    color: #ffffff;
-}
-
-.credits-link svg {
-    width: 14px;
-    height: 14px;
-    fill: currentColor;
-}
-
-/* CONTAINER PRINCIPAL DO CHAT (Transparência para revelar o fundo) */
+/* CONTAINER PRINCIPAL DO CHAT */
 .main-container {
     flex: 1;
     display: flex;
@@ -300,7 +298,6 @@ header {
     gap: 15px;
 }
 
-/* Botão do Menu Hamburguer para Celulares */
 .menu-toggle {
     display: none;
     background: transparent;
@@ -327,7 +324,6 @@ header {
     opacity: 0.8;
 }
 
-/* Janela de Mensagens */
 .chat {
     flex: 1;
     overflow-y: auto;
@@ -366,7 +362,18 @@ header {
     border-bottom-left-radius: 4px;
 }
 
-/* Área de Input Inferior Estilo Chat Completo */
+/* Mensagem de alerta do sistema */
+.system-alert {
+    align-self: center;
+    background: rgba(239, 83, 80, 0.2);
+    border: 1px solid #ef5350;
+    color: #ff9492;
+    font-size: 14px;
+    text-align: center;
+    max-width: 85%;
+    border-radius: 10px;
+}
+
 .bottom {
     padding: 30px 40px;
     background: rgba(13, 11, 18, 0.6);
@@ -392,6 +399,14 @@ header {
     box-shadow: 0 0 18px rgba(157, 78, 221, 0.25);
 }
 
+/* Estilo visual para input desativado antes do login */
+.input-wrapper.blocked {
+    background: rgba(20, 15, 25, 0.5);
+    border-color: rgba(141, 75, 230, 0.1);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
 input {
     flex: 1;
     padding: 14px 10px;
@@ -401,24 +416,8 @@ input {
     outline: none;
     font-size: 16px;
 }
-input::placeholder {
-    color: #7e6f99;
-}
-
-/* Botões de Ação */
-button.action-btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 12px;
-    background: #3b1e6d;
-    color: #e2d7ff;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 15px;
-    transition: all 0.2s;
-    border: 1px solid #5a3793;
-}
-button.action-btn:hover { background: #5a3793; color: #fff; box-shadow: 0 0 10px rgba(157, 78, 221, 0.4); }
+input::placeholder { color: #7e6f99; }
+input:disabled { cursor: not-allowed; color: #5a4f73; }
 
 .btn-mic {
     background: transparent;
@@ -434,6 +433,7 @@ button.action-btn:hover { background: #5a3793; color: #fff; box-shadow: 0 0 10px
     color: #ff80ab;
     animation: pulsePurple 1.5s infinite;
 }
+.btn-mic:disabled { opacity: 0.3; cursor: not-allowed; }
 
 .btn-send {
     background: #4a148c;
@@ -446,25 +446,8 @@ button.action-btn:hover { background: #5a3793; color: #fff; box-shadow: 0 0 10px
     transition: all 0.2s;
 }
 .btn-send:hover { background: #6200ea; box-shadow: 0 0 12px rgba(124, 77, 255, 0.5); }
+.btn-send:disabled { background: #1e1330; border-color: #311b92; color: #5a4f73; cursor: not-allowed; box-shadow: none !important; }
 
-/* Painel Dev */
-.devPanel {
-    display: none;
-    padding: 25px;
-    background: rgba(20, 15, 28, 0.95);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-left: 1px solid rgba(157, 78, 221, 0.3);
-    width: 320px;
-    position: absolute;
-    right: 0; top: 0;
-    height: 100%;
-    z-index: 2500;
-}
-.devPanel h3 { margin-top: 0; color: #d1c4e9; font-size: 18px; letter-spacing: 1px; }
-.devPanel input { background: #0d0c12; border: 1px solid rgba(157, 78, 221, 0.3); width: 100%; border-radius: 10px; margin-bottom: 15px; padding: 12px; color: #fff; }
-
-/* Overlay de fundo para fechar o menu no mobile */
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -473,62 +456,18 @@ button.action-btn:hover { background: #5a3793; color: #fff; box-shadow: 0 0 10px
     z-index: 1500;
 }
 
-/* MEDIA QUERIES - RESPONSIVIDADE PARA CELULARES */
 @media (max-width: 768px) {
-    .menu-toggle {
-        display: block;
-    }
-
-    .header-subtitle {
-        display: none;
-    }
-
-    header {
-        padding: 15px 20px;
-    }
-
-    .sidebar {
-        position: fixed;
-        left: 0; top: 0;
-        transform: translateX(-100%);
-    }
-
-    body.sidebar-open .sidebar {
-        transform: translateX(0);
-        box-shadow: 5px 0 25px rgba(0,0,0,0.6);
-    }
-
-    body.sidebar-open .sidebar-overlay {
-        display: block;
-    }
-
-    .chat {
-        padding: 20px;
-        gap: 15px;
-    }
-
-    .msg {
-        max-width: 90%;
-        font-size: 15px;
-        padding: 12px 18px;
-    }
-
-    .bottom {
-        padding: 15px 20px;
-    }
-
-    .input-wrapper {
-        padding: 4px 8px;
-    }
-
-    input {
-        padding: 10px 5px;
-        font-size: 15px;
-    }
-    
-    .devPanel {
-        width: 100%;
-    }
+    .menu-toggle { display: block; }
+    .header-subtitle { display: none; }
+    header { padding: 15px 20px; }
+    .sidebar { position: fixed; left: 0; top: 0; transform: translateX(-100%); }
+    body.sidebar-open .sidebar { transform: translateX(0); box-shadow: 5px 0 25px rgba(0,0,0,0.6); }
+    body.sidebar-open .sidebar-overlay { display: block; }
+    .chat { padding: 20px; gap: 15px; }
+    .msg { max-width: 90%; font-size: 15px; padding: 12px 18px; }
+    .bottom { padding: 15px 20px; }
+    .input-wrapper { padding: 4px 8px; }
+    input { padding: 10px 5px; font-size: 15px; }
 }
 </style>
 </head>
@@ -547,10 +486,10 @@ button.action-btn:hover { background: #5a3793; color: #fff; box-shadow: 0 0 10px
             <span>📝</span> Nova conversa
         </button>
 
-        <div class="section-title">Conversas</div>
+        <div class="section-title">Conversas Recentes</div>
         
         <div class="conversations-section" id="historyList">
-            <button class="history-item selected" onclick="focusInputMobile()">Nox AI: Diretrizes Iniciais</button>
+            <div id="no-auth-notice" style="font-size: 12px; color: #7e6f99; padding: 10px; text-align: center;">Faça login para salvar suas conversas na nuvem.</div>
         </div>
 
         <div class="sidebar-widgets">
@@ -565,7 +504,15 @@ button.action-btn:hover { background: #5a3793; color: #fff; box-shadow: 0 0 10px
         </div>
 
         <div class="sidebar-footer">
-            <button class="footer-btn" onclick="openDev()">⚙️ Configurações e ajuda</button>
+            <button class="footer-btn btn-google" id="authBtn" onclick="handleAuth()">
+                <svg viewBox="0 0 24 24" id="google-icon">
+                    <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3A11.934 11.934 0 0 0 12 0C7.305 0 3.227 2.56 1.05 6.336l4.216 3.429z"/>
+                    <path fill="#4285F4" d="M23.755 12.273c0-.818-.073-1.609-.209-2.373H12v4.509h6.591a5.64 5.64 0 0 1-2.445 3.709l4.136 3.209c2.418-2.227 3.81-5.509 3.81-9.354z"/>
+                    <path fill="#FBBC05" d="M5.266 14.235L1.05 17.664A11.934 11.934 0 0 0 12 24c3.236 0 5.955-1.073 7.945-2.909l-4.136-3.209c-1.155.773-2.627 1.236-4.218 1.236-3.182 0-5.882-2.145-6.845-5.027z"/>
+                    <path fill="#34A853" d="M1.05 6.336C.382 7.99 0 9.79 0 11.664c0 1.873.382 3.673 1.05 5.327l5.105-3.955A7.027 7.027 0 0 1 4.909 12c0-1.136.273-2.218.745-3.182L1.05 6.336z"/>
+                </svg>
+                <span id="authBtnText">Entrar com o Google</span>
+            </button>
             <button class="footer-btn" onclick="turnOffMobile()" style="color: #ff8a8a;">🔌 Desligar sistema</button>
         </div>
 
@@ -587,47 +534,181 @@ button.action-btn:hover { background: #5a3793; color: #fff; box-shadow: 0 0 10px
                 <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
                 <h1 class="logo-interface" id="title">NOX AI</h1>
             </div>
-            <div class="header-subtitle">Sistema de Controle Inteligente</div>
+            <div class="header-subtitle" id="userSubtitle">Autenticação Requerida</div>
         </header>
 
         <div class="chat" id="chat"></div>
 
         <div class="bottom">
-            <div class="input-wrapper">
-                <input id="input" placeholder="Digite ou envie um comando..." />
-                <button id="micBtn" class="btn-mic" onclick="toggleSpeech()">🎙️</button>
-                <button class="btn-send" onclick="run()">➤</button>
+            <div class="input-wrapper blocked" id="inputWrapper">
+                <input id="input" placeholder="Faça login com o Google para desbloquear o terminal..." disabled />
+                <button id="micBtn" class="btn-mic" onclick="toggleSpeech()" disabled>🎙️</button>
+                <button id="sendBtn" class="btn-send" onclick="run()" disabled>➤</button>
             </div>
         </div>
     </div>
 
-    <div class="devPanel" id="devPanel">
-        <h3>🔐 PARÂMETROS DO TERMINAL</h3>
-        <p style="font-size: 12px; color: #b39ddb; margin-top: 15px; margin-bottom: 5px;">NOME DA INTERFACE:</p>
-        <input id="nameInput" />
-        <button class="action-btn" style="width: 100%; margin-bottom: 10px;" onclick="saveDev()">Salvar Modificações</button>
-        <button class="action-btn" style="width: 100%; background: #14131a; color: #b39ddb; border: 1px solid rgba(141, 75, 230, 0.2);" onclick="document.getElementById('devPanel').style.display='none'">Voltar</button>
-    </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// ==========================================
+// CONFIGURAÇÃO DO SEU FIREBASE AQUI
+// ==========================================
+const firebaseConfig = {
+    apiKey: "SUA_API_KEY_AQUI",
+    authDomain: "SEU_AUTH_DOMAIN_AQUI",
+    projectId: "SEU_PROJECT_ID_AQUI",
+    storageBucket: "SEU_STORAGE_BUCKET_AQUI",
+    messagingSenderId: "SEU_MESSAGING_SENDER_ID_AQUI",
+    appId: "SUA_APP_ID_AQUI"
+};
+
+// Inicializações do Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+// Variáveis Globais de Estado do Usuário
+let currentUser = null;
+let unsubscribeSnapshot = null;
+
+const authBtnText = document.getElementById("authBtnText");
+const userSubtitle = document.getElementById("userSubtitle");
+const noAuthNotice = document.getElementById("no-auth-notice");
+
+// Função global para gerenciar clique de login/logout
+window.handleAuth = async function() {
+    if (!currentUser) {
+        try {
+            await signInWithPopup(auth, provider);
+        } catch (error) {
+            console.error("Erro na autenticação:", error);
+            alert("Falha no login com o Google.");
+        }
+    } else {
+        if(confirm("Deseja desconectar sua conta do Google?")) {
+            signOut(auth);
+        }
+    }
+}
+
+// Observador do Estado de Login
+onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+    window.isUserLoggedIn = !!user; // Expõe o estado para o script nativo
+
+    if (user) {
+        // Usuário Autenticado -> DESBLOQUEIA O CHAT
+        authBtnText.innerText = "Desconectar Conta";
+        userSubtitle.innerText = `Operador: ${user.displayName}`;
+        if(noAuthNotice) noAuthNotice.style.display = 'none';
+        
+        window.setChatLockState(false); // Ativa os campos de texto e botões
+        listenToConversations(user.uid);
+    } else {
+        // Usuário não autenticado -> BLOQUEIA O CHAT
+        authBtnText.innerText = "Entrar com o Google";
+        userSubtitle.innerText = "Acesso Convidado";
+        historyList.innerHTML = '<div id="no-auth-notice" style="font-size: 12px; color: #7e6f99; padding: 10px; text-align: center;">Faça login para salvar suas conversas na nuvem.</div>';
+        
+        window.setChatLockState(true); // Desativa os campos de texto e botões
+        if (unsubscribeSnapshot) unsubscribeSnapshot();
+    }
+});
+
+function listenToConversations(uid) {
+    if (unsubscribeSnapshot) unsubscribeSnapshot();
+
+    const q = query(
+        collection(db, "conversas_nox"),
+        where("userId", "==", uid),
+        orderBy("timestamp", "desc")
+    );
+
+    unsubscribeSnapshot = onSnapshot(q, (snapshot) => {
+        historyList.innerHTML = "";
+        if(snapshot.empty) {
+            historyList.innerHTML = '<div style="font-size: 12px; color: #7e6f99; padding: 10px; text-align: center;">Nenhum histórico encontrado.</div>';
+            return;
+        }
+        
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const item = document.createElement("button");
+            item.className = "history-item";
+            item.innerText = data.userInput;
+            item.onclick = () => {
+                document.querySelectorAll('.history-item').forEach(el => el.classList.remove('selected'));
+                item.classList.add('selected');
+                
+                chat.innerHTML = "";
+                window.addMessageToScreen(data.userInput, "user");
+                window.addMessageToScreen(data.aiOutput, "ai");
+                
+                if(window.innerWidth <= 768) window.toggleSidebar();
+            };
+            historyList.appendChild(item);
+        });
+    }, (error) => {
+        console.error("Erro ao buscar histórico:", error);
+    });
+}
+
+window.saveConversationToCloud = async function(userInput, aiOutput) {
+    if (!currentUser) return;
+    try {
+        await addDoc(collection(db, "conversas_nox"), {
+            userId: currentUser.uid,
+            userInput: userInput,
+            aiOutput: aiOutput,
+            timestamp: new Date()
+        });
+    } catch (e) {
+        console.error("Erro ao salvar dados na nuvem:", e);
+    }
+}
+</script>
 
 <script>
+// Lógica de Controle da Interface do Chat
 const chat = document.getElementById("chat");
 const input = document.getElementById("input");
-const devPanel = document.getElementById("devPanel");
-const nameInput = document.getElementById("nameInput");
 const title = document.getElementById("title");
 const statusText = document.getElementById("statusText");
 const micBtn = document.getElementById("micBtn");
+const sendBtn = document.getElementById("sendBtn");
+const inputWrapper = document.getElementById("inputWrapper");
 const historyList = document.getElementById("historyList");
 
-// Chave do OpenRouter Fixada
 const API_KEY = "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";
 
 let isSystemActive = false;
 let recognition;
 let isListening = false;
+window.isUserLoggedIn = false; // Controlado pelo Firebase acima
+
+// Função para Ativar/Desativar os inputs dinamicamente com base no login
+window.setChatLockState = function(isBlocked) {
+    if (isBlocked) {
+        inputWrapper.classList.add("blocked");
+        input.disabled = true;
+        micBtn.disabled = true;
+        sendBtn.disabled = true;
+        input.placeholder = "Faça login com o Google para desbloquear o terminal...";
+    } else {
+        inputWrapper.classList.remove("blocked");
+        input.disabled = false;
+        micBtn.disabled = false;
+        sendBtn.disabled = false;
+        input.placeholder = "Digite ou envie um comando...";
+    }
+}
 
 function initSpeechRecognition() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
     if (!SpeechRecognition) return;
 
     recognition = new SpeechRecognition();
@@ -660,7 +741,8 @@ function toggleSidebar() {
 }
 
 function focusInputMobile() {
-    focusInput();
+    if(!window.isUserLoggedIn) return;
+    input.focus();
     if(window.innerWidth <= 768) toggleSidebar();
 }
 
@@ -682,6 +764,7 @@ setInterval(updateWidgetTime, 1000);
 updateWidgetTime();
 
 function toggleSpeech() {
+    if (!window.isUserLoggedIn) return showAuthAlert();
     if (!recognition) return alert("Reconhecimento de voz indisponível.");
     if (isListening) { recognition.stop(); } else { recognition.start(); }
 }
@@ -690,7 +773,9 @@ function turnOn() {
     isSystemActive = true;
     document.body.classList.add("active");
     chat.innerHTML = ""; 
-    setTimeout(() => { add("Nox Ai ao seu dispor.", "ai"); }, 600);
+    setTimeout(() => { 
+        window.addMessageToScreen("Nox Ai ligada. Por favor, certifique-se de realizar a autenticação para acessar os servidores principais.", "ai"); 
+    }, 600);
 }
 
 function turnOff() {
@@ -701,48 +786,24 @@ function turnOff() {
 
 input.addEventListener("keydown", function(e) { if (e.key === "Enter") { e.preventDefault(); run(); } });
 
-function add(text, type){
+window.addMessageToScreen = function(text, type) {
     const div = document.createElement("div");
     div.className = "msg " + type;
     div.innerText = text;
     chat.appendChild(div);
     chat.scrollTop = chat.scrollHeight;
-
-    if(type === "user") {
-        addReminderList(text);
-    }
 }
 
-function addReminderList(text) {
-    document.querySelectorAll('.history-item').forEach(el => el.classList.remove('selected'));
-
-    const item = document.createElement("button");
-    item.className = "history-item selected";
-    item.innerText = text;
-    item.onclick = () => {
-        document.querySelectorAll('.history-item').forEach(el => el.classList.remove('selected'));
-        item.classList.add('selected');
-        input.value = text;
-        input.focus();
-        if(window.innerWidth <= 768) toggleSidebar();
-    };
-    
-    if(historyList.firstChild) {
-        historyList.insertBefore(item, historyList.firstChild);
-    } else {
-        historyList.appendChild(item);
-    }
+// Alerta visual caso tentem trapacear a trava
+function showAuthAlert() {
+    window.addMessageToScreen("❌ NEGADO: Autenticação do Google obrigatória para interagir com a inteligência artificial.", "system-alert");
 }
 
 function clearChat() {
     chat.innerHTML = "";
-    add("Nova sessão iniciada. Nox AI pronta.", "ai");
+    window.addMessageToScreen("Nova sessão iniciada. Nox AI pronta.", "ai");
     input.value = "";
-    input.focus();
-}
-
-function focusInput() {
-    input.focus();
+    if(window.isUserLoggedIn) input.focus();
 }
 
 async function askAI(msg){
@@ -770,26 +831,25 @@ async function askAI(msg){
 }
 
 async function run(){
+    // Trava de segurança extra no envio
+    if (!window.isUserLoggedIn) {
+        showAuthAlert();
+        input.value = "";
+        return;
+    }
+
     let text = input.value.trim();
     if(!text) return;
 
-    add(text, "user");
+    window.addMessageToScreen(text, "user");
     input.value = "";
 
     let aiResponse = await askAI(text);
-    add(aiResponse, "ai");
-}
+    window.addMessageToScreen(aiResponse, "ai");
 
-function openDev(){
-    let senha = prompt("Autenticação do Desenvolvedor:");
-    if(senha !== "Davi") return alert("Acesso Negado.");
-    devPanel.style.display = "block";
-    nameInput.value = title.innerText;
-}
-
-function saveDev() {
-    title.innerText = nameInput.value;
-    devPanel.style.display = 'none';
+    if(typeof window.saveConversationToCloud === "function"){
+        window.saveConversationToCloud(text, aiResponse);
+    }
 }
 </script>
 </body>
