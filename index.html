@@ -504,9 +504,13 @@ input:disabled { cursor: not-allowed; color: #5a4f73; }
         </div>
 
         <div class="sidebar-footer">
+            <button class="footer-btn" onclick="configureOpenRouterKey()" style="background: rgba(157, 78, 221, 0.1); border: 1px solid rgba(157, 78, 221, 0.25);">
+                <span>🔑</span> Configurar API Key
+            </button>
+            
             <button class="footer-btn btn-google" id="authBtn" onclick="handleAuth()">
                 <svg viewBox="0 0 24 24" id="google-icon">
-                    <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69(0) 3.218.6 4.418 1.582L19.91 3A11.934 11.934 0 0 0 12 0C7.305 0 3.227 2.56 1.05 6.336l4.216 3.429z"/>
+                    <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3A11.934 11.934 0 0 0 12 0C7.305 0 3.227 2.56 1.05 6.336l4.216 3.429z"/>
                     <path fill="#4285F4" d="M23.755 12.273c0-.818-.073-1.609-.209-2.373H12v4.509h6.591a5.64 5.64 0 0 1-2.445 3.709l4.136 3.209c2.418-2.227 3.81-5.509 3.81-9.354z"/>
                     <path fill="#FBBC05" d="M5.266 14.235L1.05 17.664A11.934 11.934 0 0 0 12 24c3.236 0 5.955-1.073 7.945-2.909l-4.136-3.209c-1.155.773-2.627 1.236-4.218 1.236-3.182 0-5.882-2.145-6.845-5.027z"/>
                     <path fill="#34A853" d="M1.05 6.336C.382 7.99 0 9.79 0 11.664c0 1.873.382 3.673 1.05 5.327l5.105-3.955A7.027 7.027 0 0 1 4.909 12c0-1.136.273-2.218.745-3.182L1.05 6.336z"/>
@@ -521,7 +525,7 @@ input:disabled { cursor: not-allowed; color: #5a4f73; }
             <br>
             <a href="https://instagram.com/blak_dev123" target="_blank" class="credits-link">
                 <svg viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204 0.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
                 </svg>
                 blak_dev123
             </a>
@@ -553,7 +557,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getAuth, signInWithRedirect, GoogleAuthProvider, signOut, onAuthStateChanged, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Configurações do painel do Firebase (nox-ai-570fd)
+// Configurações do Firebase - CHAVE PÚBLICA (Segura com as regras do Firestore)
 const firebaseConfig = {
     apiKey: "AIzaSyCew7kG_h5PFFr35E2c-Dsainvt1AkImsY",
     authDomain: "nox-ai-570fd.firebaseapp.com",
@@ -570,7 +574,6 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-// Variáveis Globais de Estado do Usuário
 let currentUser = null;
 let unsubscribeSnapshot = null;
 
@@ -578,7 +581,6 @@ const authBtnText = document.getElementById("authBtnText");
 const userSubtitle = document.getElementById("userSubtitle");
 const noAuthNotice = document.getElementById("no-auth-notice");
 
-// Gerencia login/logout usando redirecionamento para evitar bloqueadores de popups
 window.handleAuth = async function() {
     if (!currentUser) {
         try {
@@ -594,7 +596,6 @@ window.handleAuth = async function() {
     }
 }
 
-// Captura o resultado do redirecionamento ao retornar para a página
 getRedirectResult(auth).then((result) => {
     if (result?.user) {
         console.log("Login efetuado via redirect com sucesso:", result.user.displayName);
@@ -603,19 +604,31 @@ getRedirectResult(auth).then((result) => {
     console.error("Erro ao processar retorno do redirecionamento:", error);
 });
 
-// Observador do Estado de Login
+// Observador do Estado de Login - TRAVADO APENAS PARA SEU E-MAIL
 onAuthStateChanged(auth, (user) => {
     currentUser = user;
-    window.isUserLoggedIn = !!user; 
 
     if (user) {
-        authBtnText.innerText = "Desconectar Conta";
-        userSubtitle.innerText = `Operador: ${user.displayName}`;
-        if(noAuthNotice) noAuthNotice.style.display = 'none';
-        
-        window.setChatLockState(false); 
-        listenToConversations(user.uid);
+        // SUBSTITUA ABAIXO PELO SEU EMAIL REAL DO GOOGLE PARA DAR ACESSO
+        const emailAutorizado = "davimwdeiros15@gmail.com"; 
+
+        if (user.email === emailAutorizado) {
+            window.isUserLoggedIn = true;
+            authBtnText.innerText = "Desconectar Conta";
+            userSubtitle.innerText = `Operador: ${user.displayName}`;
+            if(noAuthNotice) noAuthNotice.style.display = 'none';
+            
+            window.setChatLockState(false); 
+            listenToConversations(user.uid);
+        } else {
+            alert("ACESSO NEGADO: Este terminal é restrito ao Operador principal.");
+            signOut(auth).then(() => {
+                window.isUserLoggedIn = false;
+                window.setChatLockState(true);
+            });
+        }
     } else {
+        window.isUserLoggedIn = false;
         authBtnText.innerText = "Entrar com o Google";
         userSubtitle.innerText = "Acesso Convidado";
         const historyList = document.getElementById("historyList");
@@ -695,12 +708,24 @@ const micBtn = document.getElementById("micBtn");
 const sendBtn = document.getElementById("sendBtn");
 const inputWrapper = document.getElementById("inputWrapper");
 
-const API_KEY = "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";
-
 let isSystemActive = false;
 let recognition;
 let isListening = false;
 window.isUserLoggedIn = false; 
+
+// Função Segura: Gerencia a chave OpenRouter salva localmente no seu computador
+window.getSecureApiKey = function() {
+    return localStorage.getItem("nox_ai_secure_key") || "";
+}
+
+window.configureOpenRouterKey = function() {
+    const currentKey = window.getSecureApiKey();
+    const newKey = prompt("Insira sua OpenRouter API Key (Ficará guardada em segurança no seu navegador):", currentKey);
+    if (newKey !== null) {
+        localStorage.setItem("nox_ai_secure_key", newKey.trim());
+        alert("Chave de API salva com sucesso!");
+    }
+}
 
 window.setChatLockState = function(isBlocked) {
     if (isBlocked) {
@@ -820,13 +845,15 @@ function clearChat() {
 }
 
 async function askAI(msg){
-    if(!API_KEY || API_KEY.trim() === "") return "⚠️ Nenhuma API KEY configurada no código.";
+    const apiKey = window.getSecureApiKey();
+    if(!apiKey) return "⚠️ Nenhuma API KEY configurada. Clique em 'Configurar API Key' na barra lateral.";
+    
     try{
         const res = await fetch("https://openrouter.ai/api/v1/chat/completions",{
             method:"POST",
             headers:{
                 "Content-Type":"application/json",
-                "Authorization":`Bearer ${API_KEY}`,
+                "Authorization":`Bearer ${apiKey}`,
                 "HTTP-Referer": window.location.origin,
                 "X-Title":"NOX AI"
             },
