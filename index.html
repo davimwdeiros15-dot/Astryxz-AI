@@ -506,7 +506,7 @@ input:disabled { cursor: not-allowed; color: #5a4f73; }
         <div class="sidebar-footer">
             <button class="footer-btn btn-google" id="authBtn" onclick="handleAuth()">
                 <svg viewBox="0 0 24 24" id="google-icon">
-                    <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3A11.934 11.934 0 0 0 12 0C7.305 0 3.227 2.56 1.05 6.336l4.216 3.429z"/>
+                    <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69(0) 3.218.6 4.418 1.582L19.91 3A11.934 11.934 0 0 0 12 0C7.305 0 3.227 2.56 1.05 6.336l4.216 3.429z"/>
                     <path fill="#4285F4" d="M23.755 12.273c0-.818-.073-1.609-.209-2.373H12v4.509h6.591a5.64 5.64 0 0 1-2.445 3.709l4.136 3.209c2.418-2.227 3.81-5.509 3.81-9.354z"/>
                     <path fill="#FBBC05" d="M5.266 14.235L1.05 17.664A11.934 11.934 0 0 0 12 24c3.236 0 5.955-1.073 7.945-2.909l-4.136-3.209c-1.155.773-2.627 1.236-4.218 1.236-3.182 0-5.882-2.145-6.845-5.027z"/>
                     <path fill="#34A853" d="M1.05 6.336C.382 7.99 0 9.79 0 11.664c0 1.873.382 3.673 1.05 5.327l5.105-3.955A7.027 7.027 0 0 1 4.909 12c0-1.136.273-2.218.745-3.182L1.05 6.336z"/>
@@ -550,18 +550,18 @@ input:disabled { cursor: not-allowed; color: #5a4f73; }
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getAuth, signInWithRedirect, GoogleAuthProvider, signOut, onAuthStateChanged, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Configurações Atualizadas do seu painel do Firebase (image_086faf.png)
+// Configurações do painel do Firebase (nox-ai-570fd)
 const firebaseConfig = {
     apiKey: "AIzaSyCew7kG_h5PFFr35E2c-Dsainvt1AkImsY",
     authDomain: "nox-ai-570fd.firebaseapp.com",
     projectId: "nox-ai-570fd",
     storageBucket: "nox-ai-570fd.firebasestorage.app",
     messagingSenderId: "221325042813",
-    appId: "1:221325042813:web:596a25b484e34f9260bd14",
-    measurementId: "G-ZZY3ZXMZWS"
+    appId: "1:221325042813:web:af839bc5cc05a21860bd14",
+    measurementId: "G-BFWQG7F7NC"
 };
 
 // Inicializações do Firebase
@@ -578,14 +578,14 @@ const authBtnText = document.getElementById("authBtnText");
 const userSubtitle = document.getElementById("userSubtitle");
 const noAuthNotice = document.getElementById("no-auth-notice");
 
-// Função global para gerenciar clique de login/logout
+// Gerencia login/logout usando redirecionamento para evitar bloqueadores de popups
 window.handleAuth = async function() {
     if (!currentUser) {
         try {
-            await signInWithPopup(auth, provider);
+            await signInWithRedirect(auth, provider);
         } catch (error) {
-            console.error("Erro na autenticação:", error);
-            alert("Falha no login com o Google. Certifique-se de que cadastrou o domínio 'davimwdeiros15-dot.github.io' nas configurações do Firebase Authentication.");
+            console.error("Erro ao iniciar login por redirecionamento:", error);
+            alert("Não foi possível iniciar a autenticação. Verifique sua conexão.");
         }
     } else {
         if(confirm("Deseja desconectar sua conta do Google?")) {
@@ -594,32 +594,43 @@ window.handleAuth = async function() {
     }
 }
 
+// Captura o resultado do redirecionamento ao retornar para a página
+getRedirectResult(auth).then((result) => {
+    if (result?.user) {
+        console.log("Login efetuado via redirect com sucesso:", result.user.displayName);
+    }
+}).catch((error) => {
+    console.error("Erro ao processar retorno do redirecionamento:", error);
+});
+
 // Observador do Estado de Login
 onAuthStateChanged(auth, (user) => {
     currentUser = user;
-    window.isUserLoggedIn = !!user; // Expõe o estado para o script nativo
+    window.isUserLoggedIn = !!user; 
 
     if (user) {
-        // Usuário Autenticado -> DESBLOQUEIA O CHAT
         authBtnText.innerText = "Desconectar Conta";
         userSubtitle.innerText = `Operador: ${user.displayName}`;
         if(noAuthNotice) noAuthNotice.style.display = 'none';
         
-        window.setChatLockState(false); // Ativa os campos de texto e botões
+        window.setChatLockState(false); 
         listenToConversations(user.uid);
     } else {
-        // Usuário não autenticado -> BLOQUEIA O CHAT
         authBtnText.innerText = "Entrar com o Google";
         userSubtitle.innerText = "Acesso Convidado";
-        historyList.innerHTML = '<div id="no-auth-notice" style="font-size: 12px; color: #7e6f99; padding: 10px; text-align: center;">Faça login para salvar suas conversas na nuvem.</div>';
+        const historyList = document.getElementById("historyList");
+        if(historyList) {
+            historyList.innerHTML = '<div id="no-auth-notice" style="font-size: 12px; color: #7e6f99; padding: 10px; text-align: center;">Faça login para salvar suas conversas na nuvem.</div>';
+        }
         
-        window.setChatLockState(true); // Desativa os campos de texto e botões
+        window.setChatLockState(true); 
         if (unsubscribeSnapshot) unsubscribeSnapshot();
     }
 });
 
 function listenToConversations(uid) {
     if (unsubscribeSnapshot) unsubscribeSnapshot();
+    const historyList = document.getElementById("historyList");
 
     const q = query(
         collection(db, "conversas_nox"),
@@ -628,6 +639,7 @@ function listenToConversations(uid) {
     );
 
     unsubscribeSnapshot = onSnapshot(q, (snapshot) => {
+        if(!historyList) return;
         historyList.innerHTML = "";
         if(snapshot.empty) {
             historyList.innerHTML = '<div style="font-size: 12px; color: #7e6f99; padding: 10px; text-align: center;">Nenhum histórico encontrado.</div>';
@@ -643,16 +655,18 @@ function listenToConversations(uid) {
                 document.querySelectorAll('.history-item').forEach(el => el.classList.remove('selected'));
                 item.classList.add('selected');
                 
-                chat.innerHTML = "";
-                window.addMessageToScreen(data.userInput, "user");
-                window.addMessageToScreen(data.aiOutput, "ai");
-                
+                const chat = document.getElementById("chat");
+                if(chat) {
+                    chat.innerHTML = "";
+                    window.addMessageToScreen(data.userInput, "user");
+                    window.addMessageToScreen(data.aiOutput, "ai");
+                }
                 if(window.innerWidth <= 768) window.toggleSidebar();
             };
             historyList.appendChild(item);
         });
     }, (error) => {
-        console.error("Erro ao buscar histórico:", error);
+        console.error("Aviso de sincronização do histórico:", error);
     });
 }
 
@@ -666,7 +680,7 @@ window.saveConversationToCloud = async function(userInput, aiOutput) {
             timestamp: new Date()
         });
     } catch (e) {
-        console.error("Erro ao salvar dados na nuvem:", e);
+        console.error("Erro ao salvar dados na nuvem (Verifique as regras do Firestore):", e);
     }
 }
 </script>
@@ -680,23 +694,21 @@ const statusText = document.getElementById("statusText");
 const micBtn = document.getElementById("micBtn");
 const sendBtn = document.getElementById("sendBtn");
 const inputWrapper = document.getElementById("inputWrapper");
-const historyList = document.getElementById("historyList");
 
 const API_KEY = "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";
 
 let isSystemActive = false;
 let recognition;
 let isListening = false;
-window.isUserLoggedIn = false; // Controlado pelo Firebase acima
+window.isUserLoggedIn = false; 
 
-// Função para Ativar/Desativar os inputs dinamicamente com base no login
 window.setChatLockState = function(isBlocked) {
     if (isBlocked) {
         inputWrapper.classList.add("blocked");
         input.disabled = true;
         micBtn.disabled = true;
         sendBtn.disabled = true;
-        input.placeholder = "Faça login com o Google para desbloquear o terminal..."
+        input.placeholder = "Faça login com o Google para desbloquear o terminal...";
     } else {
         inputWrapper.classList.remove("blocked");
         input.disabled = false;
@@ -757,7 +769,10 @@ function turnOffMobile() {
 
 function updateWidgetTime() {
     const now = new Date();
-    document.getElementById('widget-time').innerText = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+    const element = document.getElementById('widget-time');
+    if(element) {
+        element.innerText = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+    }
 }
 setInterval(updateWidgetTime, 1000);
 updateWidgetTime();
@@ -793,7 +808,6 @@ window.addMessageToScreen = function(text, type) {
     chat.scrollTop = chat.scrollHeight;
 }
 
-// Alerta visual caso tentem enviar mensagens sem login
 function showAuthAlert() {
     window.addMessageToScreen("❌ NEGADO: Autenticação do Google obrigatória para interagir com a inteligência artificial.", "system-alert");
 }
@@ -813,7 +827,7 @@ async function askAI(msg){
             headers:{
                 "Content-Type":"application/json",
                 "Authorization":`Bearer ${API_KEY}`,
-                "HTTP-Referer":"http://localhost",
+                "HTTP-Referer": window.location.origin,
                 "X-Title":"NOX AI"
             },
             body:JSON.stringify({
@@ -830,7 +844,6 @@ async function askAI(msg){
 }
 
 async function run(){
-    // Trava de segurança extra no envio
     if (!window.isUserLoggedIn) {
         showAuthAlert();
         input.value = "";
