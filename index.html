@@ -553,16 +553,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// ==========================================
-// CONFIGURAÇÃO DO SEU FIREBASE AQUI
-// ==========================================
+// Configurações Reais extraídas do seu painel do Firebase
 const firebaseConfig = {
-    apiKey: "SUA_API_KEY_AQUI",
-    authDomain: "SEU_AUTH_DOMAIN_AQUI",
-    projectId: "SEU_PROJECT_ID_AQUI",
-    storageBucket: "SEU_STORAGE_BUCKET_AQUI",
-    messagingSenderId: "SEU_MESSAGING_SENDER_ID_AQUI",
-    appId: "SUA_APP_ID_AQUI"
+    apiKey: "AIzaSyCew7kG_h5PFFr35E2c-Dsainvt1AkImsY",
+    authDomain: "nox-ai-570fd.firebaseapp.com",
+    projectId: "nox-ai-570fd",
+    storageBucket: "nox-ai-570fd.firebasestorage.app",
+    messagingSenderId: "221325042813",
+    appId: "1:221325042813:web:af839bc5cc05a21860bd14",
+    measurementId: "G-BFWQG7F7NC"
 };
 
 // Inicializações do Firebase
@@ -586,7 +585,7 @@ window.handleAuth = async function() {
             await signInWithPopup(auth, provider);
         } catch (error) {
             console.error("Erro na autenticação:", error);
-            alert("Falha no login com o Google.");
+            alert("Falha no login com o Google. Certifique-se de que está acessando por meio de um servidor local (HTTP) e que cadastrou o domínio corretamente.");
         }
     } else {
         if(confirm("Deseja desconectar sua conta do Google?")) {
