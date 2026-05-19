@@ -6,42 +6,29 @@
 <title>NOX AI SYSTEM</title>
 
 <style>
-/* Estética Geral - Fundo Espacial Sombrio */
-body {
+/* Reset básico e ocupação total da tela */
+* {
+    box-sizing: border-box;
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #07070a; 
-    color: #c5b3e6; /* Texto roxo claro minimalista */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    transition: background 0.5s ease;
-    overflow: hidden;
+    padding: 0;
 }
 
-/* Container do App - Layout Split Lateral (Inspirado nos Widgets) */
-.app {
-    width: 95%;
-    max-width: 1100px;
-    height: 85vh;
-    background: #121217; /* Cinza fosco escuro dos widgets */
-    border-radius: 24px;
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #0d0c12; /* Fundo escuro uniforme baseado nas imagens */
+    color: #c5b3e6;
+    height: 100vh;
+    width: 100vw;
     display: flex;
-    flex-direction: row;
     overflow: hidden;
-    border: 1px solid #221f2d; 
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    transition: all 0.8s ease;
-    position: relative;
 }
 
 /* Tela de Standby Futurista Minimalista */
 .standby-screen {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
     background: #0c0c10;
-    z-index: 100;
+    z-index: 1000;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -50,8 +37,8 @@ body {
 }
 
 .standby-core {
-    width: 70px;
-    height: 70px;
+    width: 90px;
+    height: 90px;
     background: #1a1525;
     border: 2px solid #7a52b3;
     border-radius: 50%;
@@ -61,242 +48,357 @@ body {
 
 .standby-text {
     margin-top: 25px;
-    font-size: 12px;
+    font-size: 14px;
     letter-spacing: 3px;
     color: #8c76b2;
     opacity: 0.7;
     text-align: center;
     text-transform: uppercase;
+    line-height: 1.8;
 }
 
 @keyframes pulsePurple {
     0% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(122, 82, 179, 0.3); }
-    70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(122, 82, 179, 0); }
+    70% { transform: scale(1); box-shadow: 0 0 0 25px rgba(122, 82, 179, 0); }
     100% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(122, 82, 179, 0); }
 }
 
 body.active .standby-screen { opacity: 0; visibility: hidden; pointer-events: none; }
 
-/* Barra Lateral Esquerda - Status e Infos (Estilo os Widgets da Imagem) */
+/* BARRA LATERAL - ESTILO MENU LATERAL DE CONVERSAS (TELA INTEIRA) */
 .sidebar {
-    width: 280px;
-    background: #0c0c10;
+    width: 320px;
+    background: #121118; /* Tom cinza escuro levemente roxo */
     border-right: 1px solid #221f2d;
-    padding: 25px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    box-sizing: border-box;
-}
-
-@media (max-width: 768px) {
-    .sidebar { display: none; } /* Oculta em telas pequenas para não quebrar */
-}
-
-.widget-box {
-    background: #16161f;
-    border-radius: 16px;
+    height: 100vh;
     padding: 15px;
-    border: 1px solid #221f2d;
+    flex-shrink: 0;
 }
 
-.widget-title {
-    font-size: 11px;
+/* Botão Nova Conversa no Topo */
+.new-chat-btn {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 1px solid #382e4d;
+    border-radius: 12px;
+    color: #dbcdff;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 25px;
+}
+.new-chat-btn:hover {
+    background: #1c1a26;
+}
+
+/* Seção de Lembrete de Conversas com Scroll Independente */
+.conversations-section {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-right: 5px;
+}
+
+.section-title {
+    font-size: 12px;
+    font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     color: #685885;
     margin-bottom: 10px;
-    font-weight: bold;
+    margin-left: 8px;
 }
 
-/* Área Principal do Chat */
-.main-container { 
-    flex: 1; 
-    display: flex; 
-    flex-direction: column; 
-    height: 100%; 
-    background: #121217;
+/* Itens das conversas anteriores */
+.history-item {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #bfaecf;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    background: transparent;
+    border: none;
+}
+.history-item:hover {
+    background: #1c1a26;
+    color: #ffffff;
+}
+.history-item.selected {
+    background: #251f35;
+    color: #e5dcff;
+    font-weight: 500;
 }
 
-header { 
-    padding: 20px 25px; 
-    border-bottom: 1px solid #221f2d; 
-    background: #121217;
+/* Área de Widgets menores embutidos na lateral */
+.sidebar-widgets {
+    border-top: 1px solid #221f2d;
+    padding-top: 15px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.widget-text {
+    font-size: 12px;
+    color: #685885;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Rodapé do Menu Lateral - Configurações e Ajuda */
+.sidebar-footer {
+    border-top: 1px solid #221f2d;
+    padding-top: 15px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.footer-btn {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    color: #bfaecf;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s;
+}
+.footer-btn:hover {
+    background: #1c1a26;
+    color: #fff;
+}
+
+/* CONTAINER PRINCIPAL DO CHAT (OCUPA O RESTANTE DA TELA) */
+.main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: #0d0c12;
+}
+
+header {
+    padding: 20px 40px;
+    border-bottom: 1px solid #1c1a26;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: #0d0c12;
 }
 
 .logo-interface {
-    font-size: 24px; 
-    font-weight: 700; 
-    text-transform: uppercase; 
+    font-size: 26px;
+    font-weight: 700;
+    text-transform: uppercase;
     color: #dbcdff;
     letter-spacing: 2px;
-    margin: 0;
 }
 
-/* Mensagens do Chat */
-.chat { 
-    flex: 1; 
-    overflow-y: auto; 
-    padding: 25px; 
-    display: flex; 
-    flex-direction: column; 
+/* Janela de Mensagens */
+.chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.msg {
+    padding: 16px 24px;
+    border-radius: 18px;
+    max-width: 75%;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    word-break: break-word;
+    font-size: 16px;
+}
+
+.user {
+    align-self: flex-end;
+    background: #251f35;
+    color: #e5dcff;
+    border-bottom-right-radius: 4px;
+}
+
+.ai {
+    align-self: flex-start;
+    background: #14131a;
+    color: #bfaecf;
+    border: 1px solid #221f2d;
+    border-bottom-left-radius: 4px;
+}
+
+/* Área de Input Inferior Estilo Chat Completo */
+.bottom {
+    padding: 30px 40px;
+    background: #0d0c12;
+    display: flex;
+    flex-direction: column;
     gap: 15px;
 }
 
-.msg { 
-    padding: 14px 18px; 
-    border-radius: 16px; 
-    max-width: 75%; 
-    white-space: pre-wrap; 
-    line-height: 1.5; 
-    word-break: break-word; 
-    font-size: 14px;
-}
-
-.user { 
-    align-self: flex-end; 
-    background: #251f35; 
-    color: #e5dcff;
-    border-bottom-right-radius: 4px; 
-}
-
-.ai { 
-    align-self: flex-start; 
-    background: #16161f; 
-    color: #bfaecf;
+.input-wrapper {
+    display: flex;
+    background: #121118;
     border: 1px solid #221f2d;
-    border-bottom-left-radius: 4px; 
+    border-radius: 16px;
+    padding: 6px 12px;
+    align-items: center;
+    gap: 10px;
 }
 
-/* Painel de Inputs Inferior */
-.bottom { 
-    display: flex; 
-    flex-direction: column; 
-    padding: 20px; 
-    gap: 12px; 
-    border-top: 1px solid #221f2d; 
-    background: #0c0c10; 
+input {
+    flex: 1;
+    padding: 14px 10px;
+    border: none;
+    background: transparent;
+    color: #dbcdff;
+    outline: none;
+    font-size: 16px;
 }
 
-.row { display: flex; gap: 10px; }
-
-input { 
-    flex: 1; 
-    padding: 14px 18px; 
-    border: 1px solid #221f2d; 
-    border-radius: 12px; 
-    background: #121217; 
-    color: #dbcdff; 
-    outline: none; 
-    font-size: 14px;
-    transition: all 0.3s;
-}
-
-input:focus { border-color: #5d3f8c; background: #161622; }
-
-/* Botões Modernos e Foscos */
-button { 
-    padding: 12px 22px; 
-    border: none; 
-    border-radius: 12px; 
-    background: #251f35; 
-    color: #c5b3e6; 
-    font-weight: 600; 
-    cursor: pointer; 
+/* Botões de Ação */
+button.action-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    background: #251f35;
+    color: #c5b3e6;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 15px;
     transition: all 0.2s;
-    font-size: 13px;
     border: 1px solid #382e4d;
 }
+button.action-btn:hover { background: #33294a; color: #fff; }
 
-button:hover { background: #33294a; color: #fff; transform: translateY(-1px); }
+.btn-mic {
+    background: transparent;
+    border: none;
+    color: #a38ec4;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 10px;
+    transition: color 0.2s;
+}
+.btn-mic.listening {
+    color: #ffb3d1;
+    animation: pulsePurple 1.5s infinite;
+}
 
-.btn-mic { background: #16161f; color: #a38ec4; border: 1px solid #221f2d; }
-.btn-mic.listening { background: #522943; color: #ffb3d1; animation: pulsePurple 1.5s infinite; border-color: transparent; }
+.btn-send {
+    background: #251f35;
+    border: 1px solid #382e4d;
+    color: #dbcdff;
+    font-size: 18px;
+    padding: 10px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-send:hover { background: #33294a; color: #fff; }
 
 /* Painel Dev */
-.devPanel { 
-    display: none; 
-    padding: 25px; 
-    background: #0c0c10; 
-    border-left: 1px solid #221f2d; 
-    width: 280px; 
-    box-sizing: border-box; 
-    position: absolute; 
-    right: 0; top: 0; 
-    height: 100%; 
-    z-index: 200; 
+.devPanel {
+    display: none;
+    padding: 25px;
+    background: #121118;
+    border-left: 1px solid #221f2d;
+    width: 320px;
+    position: absolute;
+    right: 0; top: 0;
+    height: 100%;
+    z-index: 2000;
 }
-.devPanel h3 { margin-top: 0; color: #a38ec4; font-size: 16px; letter-spacing: 1px; }
-.devPanel button { width: 100%; margin-top: 12px; background: #42285c; color: white; border: none; }
+.devPanel h3 { margin-top: 0; color: #a38ec4; font-size: 18px; }
+.devPanel input { background: #0d0c12; border: 1px solid #221f2d; width: 100%; border-radius: 10px; margin-bottom: 15px; padding: 12px; }
 </style>
 </head>
 
 <body>
 
-<div class="app">
     <div class="standby-screen" id="standby">
         <div class="standby-core" onclick="initAudio()"></div>
-        <div class="standby-text" id="statusText">SISTEMA ADORMECIDO<br><span style="font-size:10px; color:#7a52b3;">Clique no núcleo para vincular áudio</span></div>
+        <div class="standby-text" id="statusText">SISTEMA ADORMECIDO<br><span style="font-size:12px; color:#7a52b3;">Clique no núcleo para vincular áudio</span></div>
     </div>
 
     <div class="sidebar">
-        <div class="widget-box">
-            <div class="widget-title">⏱️ Relógio de Sistema</div>
-            <div id="widget-time" style="font-size: 24px; font-weight: bold; color: #dbcdff;">00:00</div>
-        </div>
+        <button class="new-chat-btn" onclick="clearChat()">
+            <span>📝</span> Nova conversa
+        </button>
+
+        <div class="section-title">Conversas</div>
         
-        <div class="widget-box">
-            <div class="widget-title">📊 Uso de Memória</div>
-            <div style="font-size: 13px; color: #9c8cb5; display: flex; justify-content: space-between;">
-                <span>Livre: 57.1%</span>
-                <span>Usado: 42.9%</span>
+        <div class="conversations-section" id="historyList">
+            <button class="history-item selected" onclick="focusInput()">Nox AI: Diretrizes Iniciais</button>
+        </div>
+
+        <div class="sidebar-widgets">
+            <div class="widget-text">
+                <span>⏱️ Hora local:</span>
+                <span id="widget-time" style="color: #dbcdff; font-weight: bold;">00:00</span>
             </div>
-            <div style="background: #221f2d; height: 6px; border-radius: 3px; margin-top: 8px; overflow: hidden;">
-                <div style="background: #685885; width: 42.9%; height: 100%;"></div>
+            <div class="widget-text">
+                <span>📊 RAM livre:</span>
+                <span style="color: #dbcdff;">57.1%</span>
             </div>
         </div>
 
-        <div class="widget-box">
-            <div class="widget-title">🌐 Link de Rede</div>
-            <div style="font-size: 12px; color: #9c8cb5; line-height: 1.6;">
-                <div>• Wi-Fi: <span style="color: #bfaecf;">Conectado</span></div>
-                <div>• Tráfego: <span style="color: #bfaecf;">↓ 4 KB/s  ↑ 90 KB/s</span></div>
-            </div>
+        <div class="sidebar-footer">
+            <button class="footer-btn" onclick="openDev()">⚙️ Configurações e ajuda</button>
+            <button class="footer-btn" onclick="turnOff()" style="color: #ffb3b3;">🔌 Desligar sistema</button>
         </div>
     </div>
 
     <div class="main-container">
         <header>
             <h1 class="logo-interface" id="title">NOX AI</h1>
-            <div style="font-size: 11px; color: #685885; letter-spacing: 1px; text-transform: uppercase;">Interface de Terminal</div>
+            <div style="font-size: 13px; color: #685885; letter-spacing: 1px; text-transform: uppercase;">Sistema de Controle Inteligente</div>
         </header>
 
         <div class="chat" id="chat"></div>
 
         <div class="bottom">
-            <div class="row">
-                <button onclick="openDev()">⚙️ Dev</button>
-                <button onclick="turnOff()" style="background:#421c24; color:#ffb3b3; border: 1px solid #632430;">🔌 Desligar</button>
-            </div>
-            <div class="row">
-                <input id="input" placeholder="Envie uma mensagem para a inteligência..." />
+            <div class="input-wrapper">
+                <input id="input" placeholder="Digite ou envie um comando para o sistema..." />
                 <button id="micBtn" class="btn-mic" onclick="toggleSpeech()">🎙️</button>
-                <button onclick="run()">➤</button>
+                <button class="btn-send" onclick="run()">➤</button>
             </div>
         </div>
     </div>
 
     <div class="devPanel" id="devPanel">
-        <h3>🔐 PARÂMETROS</h3>
-        <p style="font-size: 12px; color: #685885;">NOME DA INTERFACE:</p>
-        <input id="nameInput" style="width:100%; margin-bottom: 15px;" />
-        <button onclick="saveDev()">Salvar Alterações</button>
-        <button onclick="document.getElementById('devPanel').style.display='none'" style="background: #16161f; color: #685885;">Fechar</button>
+        <h3>🔐 PARÂMETROS DO TERMINAL</h3>
+        <p style="font-size: 12px; color: #685885; margin-top: 15px; margin-bottom: 5px;">NOME DA INTERFACE:</p>
+        <input id="nameInput" />
+        <button class="action-btn" style="width: 100%; margin-bottom: 10px;" onclick="saveDev()">Salvar Modificações</button>
+        <button class="action-btn" style="width: 100%; background: #14131a; color: #685885;" onclick="document.getElementById('devPanel').style.display='none'">Voltar</button>
     </div>
-</div>
 
 <script>
 const chat = document.getElementById("chat");
@@ -306,8 +408,9 @@ const nameInput = document.getElementById("nameInput");
 const title = document.getElementById("title");
 const statusText = document.getElementById("statusText");
 const micBtn = document.getElementById("micBtn");
+const historyList = document.getElementById("historyList");
 
-// 🔑 Sua nova chave OpenRouter válida e integrada:
+// Chave do OpenRouter Fixada
 const API_KEY = "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";
 
 let isSystemActive = false;
@@ -318,9 +421,7 @@ const CLAP_THRESHOLD = 45;
 
 function updateWidgetTime() {
     const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    document.getElementById('widget-time').innerText = `${hours}:${minutes}`;
+    document.getElementById('widget-time').innerText = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
 }
 setInterval(updateWidgetTime, 1000);
 updateWidgetTime();
@@ -368,7 +469,7 @@ function initSpeechRecognition() {
     recognition.onstart = () => {
         isListening = true;
         micBtn.classList.add("listening");
-        input.placeholder = "Capturando espectro de voz...";
+        input.placeholder = "Escutando comandos...";
     };
 
     recognition.onresult = (event) => {
@@ -379,7 +480,7 @@ function initSpeechRecognition() {
     recognition.onend = () => {
         isListening = false;
         micBtn.classList.remove("listening");
-        input.placeholder = "Envie uma mensagem para a inteligência...";
+        input.placeholder = "Digite ou envie um comando para o sistema...";
     };
 }
 
@@ -392,13 +493,13 @@ function turnOn() {
     isSystemActive = true;
     document.body.classList.add("active");
     chat.innerHTML = ""; 
-    setTimeout(() => { add("Nox AI ativa. Conexão estabelecida.", "ai"); }, 600);
+    setTimeout(() => { add("Nox Ai ao seu dispor.", "ai"); }, 600);
 }
 
 function turnOff() {
     isSystemActive = false;
     document.body.classList.remove("active");
-    statusText.innerHTML = "SISTEMA APAGADO<br><span style='color:#a38ec4; font-weight:bold;'>👋 BATA PALMA PARA DETECTAR SINAL</span>";
+    statusText.innerHTML = "SISTEMA APAGADO<br><span style='color:#a38ec4; font-weight:bold;'>👋 BATA PALMA PARA RETORNAR</span>";
 }
 
 input.addEventListener("keydown", function(e) { if (e.key === "Enter") { e.preventDefault(); run(); } });
@@ -409,22 +510,46 @@ function add(text, type){
     div.innerText = text;
     chat.appendChild(div);
     chat.scrollTop = chat.scrollHeight;
-}
 
-function openApp(app){
-    app = app.toLowerCase().replace("abrir ", "").trim();
-    add("🚀 Abrindo aplicação: " + app, "ai");
-
-    if (window.process && window.process.versions && window.process.versions.electron) {
-        const { ipcRenderer } = require('electron');
-        ipcRenderer.send('open-program', app);
-    } else {
-        add("⚠️ Comando local aceito. Requer aplicação executada via Electron Desktop.", "ai");
+    if(type === "user") {
+        addReminderList(text);
     }
 }
 
+function addReminderList(text) {
+    // Remove o status selecionado dos itens anteriores
+    document.querySelectorAll('.history-item').forEach(el => el.classList.remove('selected'));
+
+    const item = document.createElement("button");
+    item.className = "history-item selected";
+    item.innerText = text;
+    item.onclick = () => {
+        document.querySelectorAll('.history-item').forEach(el => el.classList.remove('selected'));
+        item.classList.add('selected');
+        input.value = text;
+        input.focus();
+    };
+    
+    if(historyList.firstChild) {
+        historyList.insertBefore(item, historyList.firstChild);
+    } else {
+        historyList.appendChild(item);
+    }
+}
+
+function clearChat() {
+    chat.innerHTML = "";
+    add("Nova sessão iniciada. Nox AI pronta.", "ai");
+    input.value = "";
+    input.focus();
+}
+
+function focusInput() {
+    input.focus();
+}
+
 async function askAI(msg){
-    if(!API_KEY || API_KEY.trim() === "") return "⚠️ Erro crítico: Token de autenticação ausente.";
+    if(!API_KEY || API_KEY.trim() === "") return "⚠️ Nenhuma API KEY configurada no código.";
     try{
         const res = await fetch("https://openrouter.ai/api/v1/chat/completions",{
             method:"POST",
@@ -437,14 +562,14 @@ async function askAI(msg){
             body:JSON.stringify({
                 model:"openai/gpt-3.5-turbo",
                 messages:[
-                    {role:"system",content:"Você é a NOX AI. Suas respostas devem ser curtas, diretas, frias, inteligentes e extremamente concisas, combinando com uma interface cyberpunk sombria."},
+                    {role:"system",content:"Você é a NOX AI. Suas respostas devem ser curtas, diretas, inteligentes e extremamente concisas."},
                     {role:"user",content:msg}
                 ]
             })
         });
         const data = await res.json();
-        return data.choices?.[0]?.message?.content || "Sem resposta da rede.";
-    }catch(e){ return "Falha de transmissão na rede externa."; }
+        return data.choices?.[0]?.message?.content || "Sem resposta.";
+    }catch(e){ return "Sem resposta da rede externa."; }
 }
 
 async function run(){
@@ -454,17 +579,12 @@ async function run(){
     add(text, "user");
     input.value = "";
 
-    if(text.toLowerCase().startsWith("abrir ")){
-        openApp(text);
-        return;
-    }
-
     let aiResponse = await askAI(text);
     add(aiResponse, "ai");
 }
 
 function openDev(){
-    let senha = prompt("Senha de Acesso:");
+    let senha = prompt("Autenticação do Desenvolvedor:");
     if(senha !== "Davi") return alert("Acesso Negado.");
     devPanel.style.display = "block";
     nameInput.value = title.innerText;
@@ -473,7 +593,6 @@ function openDev(){
 function saveDev() {
     title.innerText = nameInput.value;
     devPanel.style.display = 'none';
-    add("⚙️ Configurações internas modificadas.", "ai");
 }
 </script>
 </body>
