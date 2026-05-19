@@ -6,38 +6,41 @@
 <title>NOX AI SYSTEM</title>
 
 <style>
-body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:#000105; 
-    color:#00e5ff;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
+/* Estética Geral - Fundo Espacial Sombrio */
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #07070a; 
+    color: #c5b3e6; /* Texto roxo claro minimalista */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
     transition: background 0.5s ease;
     overflow: hidden;
 }
 
-.app{
+/* Container do App - Layout Split Lateral (Inspirado nos Widgets) */
+.app {
     width: 95%;
-    max-width: 1000px;
-    height: 90vh;
-    background:#00050a; 
-    border-radius:15px;
-    display:flex;
-    flex-direction:row;
-    overflow:hidden;
-    border:1px solid #00e5ff11; 
-    box-shadow: 0 0 0px rgba(0, 229, 255, 0);
+    max-width: 1100px;
+    height: 85vh;
+    background: #121217; /* Cinza fosco escuro dos widgets */
+    border-radius: 24px;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    border: 1px solid #221f2d; 
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     transition: all 0.8s ease;
     position: relative;
 }
 
+/* Tela de Standby Futurista Minimalista */
 .standby-screen {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: #00050a;
+    background: #0c0c10;
     z-index: 100;
     display: flex;
     flex-direction: column;
@@ -47,65 +50,187 @@ body{
 }
 
 .standby-core {
-    width: 60px;
-    height: 60px;
-    background: #002233;
-    border: 2px solid #00e5ff33;
+    width: 70px;
+    height: 70px;
+    background: #1a1525;
+    border: 2px solid #7a52b3;
     border-radius: 50%;
-    animation: pulse 2s infinite;
+    animation: pulsePurple 2.5s infinite;
     cursor: pointer;
 }
 
 .standby-text {
-    margin-top: 20px;
-    font-size: 14px;
-    letter-spacing: 2px;
-    opacity: 0.4;
+    margin-top: 25px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #8c76b2;
+    opacity: 0.7;
     text-align: center;
+    text-transform: uppercase;
 }
 
-@keyframes pulse {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.2); }
-    70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(0, 229, 255, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+@keyframes pulsePurple {
+    0% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(122, 82, 179, 0.3); }
+    70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(122, 82, 179, 0); }
+    100% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(122, 82, 179, 0); }
 }
 
-body.active { background: #000814; }
-body.active .app {
-    background: #001018;
-    border-color: #00e5ff55;
-    box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
-}
 body.active .standby-screen { opacity: 0; visibility: hidden; pointer-events: none; }
 
-.main-container { flex: 1; display: flex; flex-direction: column; height: 100%; }
-header{ text-align:center; padding:15px; border-bottom:1px solid #00e5ff33; background: #00141f; }
-
-.logo-3d {
-    font-size: 38px; font-weight: bold; text-transform: uppercase; color: #00e5ff;
-    text-shadow: 0 1px 0 #0099cc, 0 2px 0 #0088bb, 0 3px 0 #0077aa, 0 5px 10px rgba(0,0,0,0.6), 0 0 10px rgba(0,229,255,0.7);
-    position: relative; display: inline-block; margin: 0;
+/* Barra Lateral Esquerda - Status e Infos (Estilo os Widgets da Imagem) */
+.sidebar {
+    width: 280px;
+    background: #0c0c10;
+    border-right: 1px solid #221f2d;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
 }
 
-.chat{ flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:15px; }
-.msg{ padding:12px 16px; border-radius:10px; max-width: 75%; white-space:pre-wrap; line-height: 1.4; word-break: break-word; }
-.user{ align-self:flex-end; background:#00e5ff22; border-bottom-right-radius: 2px; }
-.ai{ align-self:flex-start; background:#002233; border-bottom-left-radius: 2px; }
-.bottom{ display:flex; flex-direction:column; padding:15px; gap:10px; border-top:1px solid #00e5ff33; background: #00141f; }
-.row{ display:flex; gap:10px; }
+@media (max-width: 768px) {
+    .sidebar { display: none; } /* Oculta em telas pequenas para não quebrar */
+}
 
-input{ flex:1; padding:12px; border:1px solid #00e5ff33; border-radius:8px; background:#000c14; color:#00e5ff; outline: none; }
-input:focus { border-color: #00e5ff; }
+.widget-box {
+    background: #16161f;
+    border-radius: 16px;
+    padding: 15px;
+    border: 1px solid #221f2d;
+}
 
-button{ padding:12px 20px; border:none; border-radius:8px; background:#00e5ff; color: #000814; font-weight:bold; cursor:pointer; transition: 0.2s; }
-button:hover { background: #80f2ff; transform: scale(1.02); }
+.widget-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #685885;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
 
-.btn-mic { background: #002233; color: #00e5ff; border: 1px solid #00e5ff33; }
-.btn-mic.listening { background: #ff3366; color: white; animation: pulse 1.5s infinite; border-color: transparent; }
+/* Área Principal do Chat */
+.main-container { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    height: 100%; 
+    background: #121217;
+}
 
-.devPanel{ display:none; padding:20px; background:#000f1a; border-left:1px solid #00e5ff33; width: 280px; box-sizing: border-box; overflow-y: auto; }
-.devPanel h3 { margin-top: 0; color: #ff3366; }
-.devPanel button { width: 100%; margin-top: 10px; background: #ff3366; color: white; }
+header { 
+    padding: 20px 25px; 
+    border-bottom: 1px solid #221f2d; 
+    background: #121217;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-interface {
+    font-size: 24px; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    color: #dbcdff;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+/* Mensagens do Chat */
+.chat { 
+    flex: 1; 
+    overflow-y: auto; 
+    padding: 25px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px;
+}
+
+.msg { 
+    padding: 14px 18px; 
+    border-radius: 16px; 
+    max-width: 75%; 
+    white-space: pre-wrap; 
+    line-height: 1.5; 
+    word-break: break-word; 
+    font-size: 14px;
+}
+
+.user { 
+    align-self: flex-end; 
+    background: #251f35; 
+    color: #e5dcff;
+    border-bottom-right-radius: 4px; 
+}
+
+.ai { 
+    align-self: flex-start; 
+    background: #16161f; 
+    color: #bfaecf;
+    border: 1px solid #221f2d;
+    border-bottom-left-radius: 4px; 
+}
+
+/* Painel de Inputs Inferior */
+.bottom { 
+    display: flex; 
+    flex-direction: column; 
+    padding: 20px; 
+    gap: 12px; 
+    border-top: 1px solid #221f2d; 
+    background: #0c0c10; 
+}
+
+.row { display: flex; gap: 10px; }
+
+input { 
+    flex: 1; 
+    padding: 14px 18px; 
+    border: 1px solid #221f2d; 
+    border-radius: 12px; 
+    background: #121217; 
+    color: #dbcdff; 
+    outline: none; 
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+input:focus { border-color: #5d3f8c; background: #161622; }
+
+/* Botões Modernos e Foscos */
+button { 
+    padding: 12px 22px; 
+    border: none; 
+    border-radius: 12px; 
+    background: #251f35; 
+    color: #c5b3e6; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: all 0.2s;
+    font-size: 13px;
+    border: 1px solid #382e4d;
+}
+
+button:hover { background: #33294a; color: #fff; transform: translateY(-1px); }
+
+.btn-mic { background: #16161f; color: #a38ec4; border: 1px solid #221f2d; }
+.btn-mic.listening { background: #522943; color: #ffb3d1; animation: pulsePurple 1.5s infinite; border-color: transparent; }
+
+/* Painel Dev */
+.devPanel { 
+    display: none; 
+    padding: 25px; 
+    background: #0c0c10; 
+    border-left: 1px solid #221f2d; 
+    width: 280px; 
+    box-sizing: border-box; 
+    position: absolute; 
+    right: 0; top: 0; 
+    height: 100%; 
+    z-index: 200; 
+}
+.devPanel h3 { margin-top: 0; color: #a38ec4; font-size: 16px; letter-spacing: 1px; }
+.devPanel button { width: 100%; margin-top: 12px; background: #42285c; color: white; border: none; }
 </style>
 </head>
 
@@ -114,24 +239,50 @@ button:hover { background: #80f2ff; transform: scale(1.02); }
 <div class="app">
     <div class="standby-screen" id="standby">
         <div class="standby-core" onclick="initAudio()"></div>
-        <div class="standby-text" id="statusText">SISTEMA APAGADO<br><span style="font-size:11px; color:#ff3366;">CLIQUE NA ESFERA PARA FAZER O VÍNCULO DE ÁUDIO</span></div>
+        <div class="standby-text" id="statusText">SISTEMA ADORMECIDO<br><span style="font-size:10px; color:#7a52b3;">Clique no núcleo para vincular áudio</span></div>
+    </div>
+
+    <div class="sidebar">
+        <div class="widget-box">
+            <div class="widget-title">⏱️ Relógio de Sistema</div>
+            <div id="widget-time" style="font-size: 24px; font-weight: bold; color: #dbcdff;">00:00</div>
+        </div>
+        
+        <div class="widget-box">
+            <div class="widget-title">📊 Uso de Memória</div>
+            <div style="font-size: 13px; color: #9c8cb5; display: flex; justify-content: space-between;">
+                <span>Livre: 57.1%</span>
+                <span>Usado: 42.9%</span>
+            </div>
+            <div style="background: #221f2d; height: 6px; border-radius: 3px; margin-top: 8px; overflow: hidden;">
+                <div style="background: #685885; width: 42.9%; height: 100%;"></div>
+            </div>
+        </div>
+
+        <div class="widget-box">
+            <div class="widget-title">🌐 Link de Rede</div>
+            <div style="font-size: 12px; color: #9c8cb5; line-height: 1.6;">
+                <div>• Wi-Fi: <span style="color: #bfaecf;">Conectado</span></div>
+                <div>• Tráfego: <span style="color: #bfaecf;">↓ 4 KB/s  ↑ 90 KB/s</span></div>
+            </div>
+        </div>
     </div>
 
     <div class="main-container">
         <header>
-            <h1 class="logo-3d" id="title" data-text="NOX AI">NOX AI</h1>
-            <div style="font-size:12px; opacity:0.8; margin-top: 5px;">Sistema de Controle Inteligente</div>
+            <h1 class="logo-interface" id="title">NOX AI</h1>
+            <div style="font-size: 11px; color: #685885; letter-spacing: 1px; text-transform: uppercase;">Interface de Terminal</div>
         </header>
 
         <div class="chat" id="chat"></div>
 
         <div class="bottom">
             <div class="row">
-                <button onclick="openDev()">⚙ Dev</button>
-                <button onclick="turnOff()" style="background:#ff3366; color:white;">🔌 Desligar</button>
+                <button onclick="openDev()">⚙️ Dev</button>
+                <button onclick="turnOff()" style="background:#421c24; color:#ffb3b3; border: 1px solid #632430;">🔌 Desligar</button>
             </div>
             <div class="row">
-                <input id="input" placeholder="Digite ou clique no microfone para falar..." />
+                <input id="input" placeholder="Envie uma mensagem para a inteligência..." />
                 <button id="micBtn" class="btn-mic" onclick="toggleSpeech()">🎙️</button>
                 <button onclick="run()">➤</button>
             </div>
@@ -139,11 +290,11 @@ button:hover { background: #80f2ff; transform: scale(1.02); }
     </div>
 
     <div class="devPanel" id="devPanel">
-        <h3>🔐 MODO DEV</h3>
-        <p>NOME DA IA:</p>
+        <h3>🔐 PARÂMETROS</h3>
+        <p style="font-size: 12px; color: #685885;">NOME DA INTERFACE:</p>
         <input id="nameInput" style="width:100%; margin-bottom: 15px;" />
-        <button onclick="saveDev()">Salvar</button>
-        <button onclick="document.getElementById('devPanel').style.display='none'" style="background: #333; color: #fff;">Fechar</button>
+        <button onclick="saveDev()">Salvar Alterações</button>
+        <button onclick="document.getElementById('devPanel').style.display='none'" style="background: #16161f; color: #685885;">Fechar</button>
     </div>
 </div>
 
@@ -156,20 +307,27 @@ const title = document.getElementById("title");
 const statusText = document.getElementById("statusText");
 const micBtn = document.getElementById("micBtn");
 
-// 🔑 Chave integrada de forma fixa e direta (Oculta do painel visual):
-const API_KEY = "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";
+// 🔑 Sua nova chave OpenRouter válida e integrada:
+const API_KEY = "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";
 
 let isSystemActive = false;
 let recognition;
 let isListening = false;
-
 let audioContext, analyser, microphone, javascriptNode;
 const CLAP_THRESHOLD = 45; 
 
+function updateWidgetTime() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('widget-time').innerText = `${hours}:${minutes}`;
+}
+setInterval(updateWidgetTime, 1000);
+updateWidgetTime();
+
 function initAudio() {
     if (audioContext) return;
-    
-    statusText.innerHTML = "INICIALIZANDO MOTOR ACÚSTICO...";
+    statusText.innerHTML = "SINCRO-SISTEMA ATIVANDO...";
     
     navigator.mediaDevices.getUserMedia({ audio: true })
     .then(function(stream) {
@@ -183,7 +341,7 @@ function initAudio() {
         analyser.connect(javascriptNode);
         javascriptNode.connect(audioContext.destination);
 
-        statusText.innerHTML = "SISTEMA OPERACIONAL AMBIENTAL<br><span style='color:#00e5ff; font-weight:bold;'>👋 BATA PALMA PARA INICIAR</span>";
+        statusText.innerHTML = "SISTEMA AMBIENTAL PRONTO<br><span style='color:#a38ec4; font-weight:bold;'>👋 BATA PALMA PARA ENTRAR</span>";
 
         javascriptNode.onaudioprocess = function() {
             const array = new Uint8Array(analyser.frequencyBinCount);
@@ -194,7 +352,7 @@ function initAudio() {
         }
         initSpeechRecognition(); 
     }).catch(err => { 
-        statusText.innerHTML = "<span style='color:red;'>ERRO AO CARREGAR CANAL DE ÁUDIO.</span>"; 
+        statusText.innerHTML = "<span style='color:#ffb3b3;'>ERRO DE CONEXÃO ACÚSTICA.</span>"; 
     });
 }
 
@@ -210,49 +368,42 @@ function initSpeechRecognition() {
     recognition.onstart = () => {
         isListening = true;
         micBtn.classList.add("listening");
-        input.placeholder = "Ouvindo comando...";
+        input.placeholder = "Capturando espectro de voz...";
     };
 
     recognition.onresult = (event) => {
-        const textResult = event.results[0][0].transcript;
-        input.value = textResult;
+        input.value = event.results[0][0].transcript;
         run(); 
     };
 
     recognition.onend = () => {
         isListening = false;
         micBtn.classList.remove("listening");
-        input.placeholder = "Digite ou clique no microfone para falar...";
+        input.placeholder = "Envie uma mensagem para a inteligência...";
     };
 }
 
 function toggleSpeech() {
     if (!recognition) return alert("Reconhecimento de voz indisponível.");
-    if (isListening) {
-        recognition.stop();
-    } else {
-        recognition.start();
-    }
+    if (isListening) { recognition.stop(); } else { recognition.start(); }
 }
 
 function turnOn() {
     isSystemActive = true;
     document.body.classList.add("active");
     chat.innerHTML = ""; 
-    setTimeout(() => {
-        add("Nox Ai ao seu dispor.", "ai");
-    }, 600);
+    setTimeout(() => { add("Nox AI ativa. Conexão estabelecida.", "ai"); }, 600);
 }
 
 function turnOff() {
     isSystemActive = false;
     document.body.classList.remove("active");
-    statusText.innerHTML = "SISTEMA APAGADO<br><span style='color:#00e5ff; font-weight:bold;'>👋 BATA PALMA PARA INICIAR DE NOVO</span>";
+    statusText.innerHTML = "SISTEMA APAGADO<br><span style='color:#a38ec4; font-weight:bold;'>👋 BATA PALMA PARA DETECTAR SINAL</span>";
 }
 
 input.addEventListener("keydown", function(e) { if (e.key === "Enter") { e.preventDefault(); run(); } });
 
-function add(text,type){
+function add(text, type){
     const div = document.createElement("div");
     div.className = "msg " + type;
     div.innerText = text;
@@ -262,18 +413,18 @@ function add(text,type){
 
 function openApp(app){
     app = app.toLowerCase().replace("abrir ", "").trim();
-    add("🚀 Invocando software local: " + app, "ai");
+    add("🚀 Abrindo aplicação: " + app, "ai");
 
     if (window.process && window.process.versions && window.process.versions.electron) {
         const { ipcRenderer } = require('electron');
         ipcRenderer.send('open-program', app);
     } else {
-        add("⚠️ Comando aceito, mas requer execução em modo Desktop (.exe)", "ai");
+        add("⚠️ Comando local aceito. Requer aplicação executada via Electron Desktop.", "ai");
     }
 }
 
 async function askAI(msg){
-    if(!API_KEY || API_KEY.trim() === "") return "⚠️ Erro crítico: Canal de API desconectado.";
+    if(!API_KEY || API_KEY.trim() === "") return "⚠️ Erro crítico: Token de autenticação ausente.";
     try{
         const res = await fetch("https://openrouter.ai/api/v1/chat/completions",{
             method:"POST",
@@ -286,21 +437,21 @@ async function askAI(msg){
             body:JSON.stringify({
                 model:"openai/gpt-3.5-turbo",
                 messages:[
-                    {role:"system",content:"Você é a NOX AI, um assistente virtual integrado ao sistema operacional de computador do usuário. Suas respostas devem ser diretas, inteligentes e concisas."},
+                    {role:"system",content:"Você é a NOX AI. Suas respostas devem ser curtas, diretas, frias, inteligentes e extremamente concisas, combinando com uma interface cyberpunk sombria."},
                     {role:"user",content:msg}
                 ]
             })
         });
         const data = await res.json();
-        return data.choices?.[0]?.message?.content || "Sem resposta do servidor.";
-    }catch(e){ return "Erro de conexão externa."; }
+        return data.choices?.[0]?.message?.content || "Sem resposta da rede.";
+    }catch(e){ return "Falha de transmissão na rede externa."; }
 }
 
 async function run(){
     let text = input.value.trim();
     if(!text) return;
 
-    add(text,"user");
+    add(text, "user");
     input.value = "";
 
     if(text.toLowerCase().startsWith("abrir ")){
@@ -309,21 +460,20 @@ async function run(){
     }
 
     let aiResponse = await askAI(text);
-    add(aiResponse,"ai");
+    add(aiResponse, "ai");
 }
 
 function openDev(){
-    let senha = prompt("Senha Dev:");
-    if(senha !== "Davi") return alert("Incorreta!");
+    let senha = prompt("Senha de Acesso:");
+    if(senha !== "Davi") return alert("Acesso Negado.");
     devPanel.style.display = "block";
     nameInput.value = title.innerText;
 }
 
-function saveDev(){
+function saveDev() {
     title.innerText = nameInput.value;
-    title.setAttribute('data-text', nameInput.value);
     devPanel.style.display = 'none';
-    add("⚙ Diretrizes atualizadas.", "ai");
+    add("⚙️ Configurações internas modificadas.", "ai");
 }
 </script>
 </body>
