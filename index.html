@@ -45,12 +45,10 @@ body::before {
     content: "";
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    /* Carrega a imagem enviada */
     background-image: url('image_071b05.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    /* Altera o espectro de cor do azul original para o roxo cyber */
     filter: hue-rotate(55deg) brightness(0.4) contrast(1.2);
     z-index: -1;
 }
@@ -443,16 +441,14 @@ button.action-btn:hover { background: #5a3793; color: #fff; box-shadow: 0 0 10px
     z-index: 1500;
 }
 
-/* ==========================================================================
-   MEDIA QUERIES - RESPONSIVIDADE COMPLETA PARA CELULARES
-   ========================================================================== */
+/* MEDIA QUERIES - RESPONSIVIDADE PARA CELULARES */
 @media (max-width: 768px) {
     .menu-toggle {
-        display: block; /* Revela o botão hamburguer no mobile */
+        display: block;
     }
 
     .header-subtitle {
-        display: none; /* Esconde o subtítulo longo no celular */
+        display: none;
     }
 
     header {
@@ -462,10 +458,9 @@ button.action-btn:hover { background: #5a3793; color: #fff; box-shadow: 0 0 10px
     .sidebar {
         position: fixed;
         left: 0; top: 0;
-        transform: translateX(-100%); /* Esconde a sidebar para fora da tela */
+        transform: translateX(-100%);
     }
 
-    /* Quando a sidebar estiver ativa no celular */
     body.sidebar-open .sidebar {
         transform: translateX(0);
         box-shadow: 5px 0 25px rgba(0,0,0,0.6);
@@ -481,7 +476,7 @@ button.action-btn:hover { background: #5a3793; color: #fff; box-shadow: 0 0 10px
     }
 
     .msg {
-        max-width: 90%; /* Mensagens ocupam mais espaço no mobile */
+        max-width: 90%;
         font-size: 15px;
         padding: 12px 18px;
     }
@@ -500,7 +495,7 @@ button.action-btn:hover { background: #5a3793; color: #fff; box-shadow: 0 0 10px
     }
     
     .devPanel {
-        width: 100%; /* Painel dev ocupa tela cheia no mobile */
+        width: 100%;
     }
 }
 </style>
@@ -511,8 +506,8 @@ button.action-btn:hover { background: #5a3793; color: #fff; box-shadow: 0 0 10px
     <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
     <div class="standby-screen" id="standby">
-        <div class="standby-core" onclick="initAudio()"></div>
-        <div class="standby-text" id="statusText">SISTEMA ADORMECIDO<br><span style="font-size:12px; color:#9d4edd; font-weight: bold;">Clique no núcleo para vincular áudio</span></div>
+        <div class="standby-core" onclick="turnOn()"></div>
+        <div class="standby-text" id="statusText">SISTEMA ADORMECIDO<br><span style="font-size:12px; color:#9d4edd; font-weight: bold;">Clique no núcleo para iniciar</span></div>
     </div>
 
     <div class="sidebar" id="sidebar">
@@ -587,67 +582,8 @@ const API_KEY = "sk-or-v1-1288bd9db2c4e0151ad3d8122eed499d02c87ee6da63f9288cb5e6
 let isSystemActive = false;
 let recognition;
 let isListening = false;
-let audioContext, analyser, microphone, javascriptNode;
-const CLAP_THRESHOLD = 45; 
 
-// Controladores do Menu responsivo
-function toggleSidebar() {
-    document.body.classList.toggle("sidebar-open");
-}
-
-function focusInputMobile() {
-    focusInput();
-    if(window.innerWidth <= 768) toggleSidebar();
-}
-
-function clearChatMobile() {
-    clearChat();
-    if(window.innerWidth <= 768) toggleSidebar();
-}
-
-function turnOffMobile() {
-    turnOff();
-    if(window.innerWidth <= 768) toggleSidebar();
-}
-
-function updateWidgetTime() {
-    const now = new Date();
-    document.getElementById('widget-time').innerText = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
-}
-setInterval(updateWidgetTime, 1000);
-updateWidgetTime();
-
-function initAudio() {
-    if (audioContext) return;
-    statusText.innerHTML = "SINCRO-SISTEMA ATIVANDO...";
-    
-    navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(function(stream) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioContext.createAnalyser();
-        microphone = audioContext.createMediaStreamSource(stream);
-        javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
-        analyser.smoothingTimeConstant = 0.3;
-        analyser.fftSize = 1024;
-        microphone.connect(analyser);
-        analyser.connect(javascriptNode);
-        javascriptNode.connect(audioContext.destination);
-
-        statusText.innerHTML = "SISTEMA AMBIENTAL PRONTO<br><span style='color:#c090f9; font-weight:bold;'>👋 BATA PALMA PARA ENTRAR</span>";
-
-        javascriptNode.onaudioprocess = function() {
-            const array = new Uint8Array(analyser.frequencyBinCount);
-            analyser.getByteFrequencyData(array);
-            let values = 0;
-            for (let i = 0; i < array.length; i++) { values += array[i]; }
-            if ((values / array.length) > CLAP_THRESHOLD && !isSystemActive) { turnOn(); }
-        }
-        initSpeechRecognition(); 
-    }).catch(err => { 
-        statusText.innerHTML = "<span style='color:#ffb3b3;'>ERRO DE CONEXÃO ACÚSTICA.</span>"; 
-    });
-}
-
+// Inicializa o reconhecimento de voz padrão para quando o usuário clicar no botão do microfone
 function initSpeechRecognition() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) return;
@@ -675,6 +611,35 @@ function initSpeechRecognition() {
     };
 }
 
+// Inicializa a escuta apenas ao carregar a página
+initSpeechRecognition();
+
+function toggleSidebar() {
+    document.body.classList.toggle("sidebar-open");
+}
+
+function focusInputMobile() {
+    focusInput();
+    if(window.innerWidth <= 768) toggleSidebar();
+}
+
+function clearChatMobile() {
+    clearChat();
+    if(window.innerWidth <= 768) toggleSidebar();
+}
+
+function turnOffMobile() {
+    turnOff();
+    if(window.innerWidth <= 768) toggleSidebar();
+}
+
+function updateWidgetTime() {
+    const now = new Date();
+    document.getElementById('widget-time').innerText = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+}
+setInterval(updateWidgetTime, 1000);
+updateWidgetTime();
+
 function toggleSpeech() {
     if (!recognition) return alert("Reconhecimento de voz indisponível.");
     if (isListening) { recognition.stop(); } else { recognition.start(); }
@@ -690,7 +655,7 @@ function turnOn() {
 function turnOff() {
     isSystemActive = false;
     document.body.classList.remove("active");
-    statusText.innerHTML = "SISTEMA APAGADO<br><span style='color:#c090f9; font-weight:bold;'>👋 BATA PALMA PARA RETORNAR</span>";
+    statusText.innerHTML = "SISTEMA APAGADO<br><span style='color:#c090f9; font-weight:bold;'>Clique no núcleo para retornar</span>";
 }
 
 input.addEventListener("keydown", function(e) { if (e.key === "Enter") { e.preventDefault(); run(); } });
