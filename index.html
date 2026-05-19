@@ -619,8 +619,8 @@ input:disabled { cursor: not-allowed; color: #5a4f73; }
 <script>
 // ==========================================
 // CONFIGURAÇÃO DA CHAVE DO PROJETO NOX AI
-// Sua nova chave mestra do OpenRouter ativa e embutida
-const CHAVE_MESTRA = "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";
+// Sua chave mestra do OpenRouter ativa e embutida
+const CHAVE_MESTRA = "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";
 // ==========================================
 
 const chat = document.getElementById("chat");
@@ -899,9 +899,7 @@ async function askAI(msg){
             method:"POST",
             headers:{
                 "Content-Type":"application/json",
-                "Authorization":`Bearer ${CHAVE_MESTRA}`,
-                "HTTP-Referer": window.location.origin,
-                "X-Title":"NOX AI"
+                "Authorization":`Bearer ${CHAVE_MESTRA}`
             },
             body:JSON.stringify({
                 model:"openai/gpt-4o-mini",
@@ -911,12 +909,18 @@ async function askAI(msg){
                 ]
             })
         });
-        const data = await res.json();
-        if(data.error) {
-            return `❌ Erro do OpenRouter (${data.error.code}): ${data.error.message}`;
+
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            const errMsg = errData.error?.message || `Status HTTP ${res.status}`;
+            return `❌ Erro do OpenRouter (${res.status}): ${errMsg}`;
         }
-        return data.choices?.[0]?.message?.content || "Sem resposta.";
-    }catch(e){ return "Sem resposta da rede externa."; }
+
+        const data = await res.json();
+        return data.choices?.[0]?.message?.content || "Sem resposta válida da inteligência artificial.";
+    }catch(e){ 
+        return "Sem resposta da rede externa. Verifique sua conexão com a internet."; 
+    }
 }
 
 async function run(){
