@@ -580,9 +580,6 @@ input:disabled { cursor: not-allowed; color: #5a4f73; }
         </div>
 
         <div class="sidebar-footer">
-            <button class="footer-btn" onclick="configureOpenRouterKey()" style="background: rgba(157, 78, 221, 0.1); border: 1px solid rgba(157, 78, 221, 0.25);">
-                <span>🔑</span> Configurar API Key
-            </button>
             <button class="footer-btn" onclick="logoutLocal()" style="color: #b39ddb;">🚪 Desconectar Nick</button>
             <button class="footer-btn" onclick="turnOffMobile()" style="color: #ff8a8a;">🔌 Desligar sistema</button>
         </div>
@@ -620,6 +617,12 @@ input:disabled { cursor: not-allowed; color: #5a4f73; }
     </div>
 
 <script>
+// ==========================================
+// CONFIGURAÇÃO DA CHAVE DO PROJETO NOX AI
+// Sua nova chave mestra do OpenRouter ativa e embutida
+const CHAVE_MESTRA = "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";
+// ==========================================
+
 const chat = document.getElementById("chat");
 const input = document.getElementById("input");
 const title = document.getElementById("title");
@@ -644,25 +647,12 @@ let localHistory = [];
 let isSignUpMode = false;
 let loggedUser = null;
 
-// NOVA TRAVA DE SEGURANÇA: Filtro de termos ofensivos / palavrões
+// Filtro de termos ofensivos / palavrões
 const badWords = ["porra", "caralho", "merda", "puta", "viado", "fdp", "corno", "bosta", "cacete", "vtnm"];
 
 function containsBadWords(text) {
     const cleanText = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     return badWords.some(word => cleanText.includes(word));
-}
-
-window.getSecureApiKey = function() {
-    return localStorage.getItem("nox_ai_secure_key") || "";
-}
-
-window.configureOpenRouterKey = function() {
-    const currentKey = window.getSecureApiKey();
-    const newKey = prompt("Insira sua OpenRouter API Key:", currentKey);
-    if (newKey !== null) {
-        localStorage.setItem("nox_ai_secure_key", newKey.trim());
-        alert("Chave de API salva com sucesso!");
-    }
 }
 
 function checkSession() {
@@ -769,7 +759,7 @@ function setChatLockState(isBlocked) {
         input.disabled = true;
         micBtn.disabled = true;
         sendBtn.disabled = true;
-        input.placeholder = "Faça login para desbloquear o terminal...";
+        input.placeholder = "Faça login para desbloquear o terminal..."
     } else {
         inputWrapper.classList.remove("blocked");
         input.disabled = false;
@@ -900,20 +890,21 @@ function renderHistoryList() {
 }
 
 async function askAI(msg){
-    const apiKey = window.getSecureApiKey();
-    if(!apiKey) return "⚠️ Nenhuma API KEY configurada. Clique em 'Configurar API Key' na barra lateral.";
+    if(!CHAVE_MESTRA || CHAVE_MESTRA.includes("COLE_AQUI")) {
+        return "⚠️ Erro crítico: O desenvolvedor ainda não configurou a CHAVE_MESTRA dentro do código.";
+    }
     
     try{
         const res = await fetch("https://openrouter.ai/api/v1/chat/completions",{
             method:"POST",
             headers:{
                 "Content-Type":"application/json",
-                "Authorization":`Bearer ${apiKey}`,
+                "Authorization":`Bearer ${CHAVE_MESTRA}`,
                 "HTTP-Referer": window.location.origin,
                 "X-Title":"NOX AI"
             },
             body:JSON.stringify({
-                model:"openai/gpt-3.5-turbo",
+                model:"openai/gpt-4o-mini",
                 messages:[
                     {role:"system",content:"Você é a NOX AI. Suas respostas devem ser curtas, diretas, inteligentes e extremamente concisas."},
                     {role:"user",content:msg}
@@ -921,6 +912,9 @@ async function askAI(msg){
             })
         });
         const data = await res.json();
+        if(data.error) {
+            return `❌ Erro do OpenRouter (${data.error.code}): ${data.error.message}`;
+        }
         return data.choices?.[0]?.message?.content || "Sem resposta.";
     }catch(e){ return "Sem resposta da rede externa."; }
 }
@@ -931,7 +925,6 @@ async function run(){
     let text = input.value.trim();
     if(!text) return;
 
-    // Checagem de segurança ativa no input de texto antes do processamento
     if (containsBadWords(text)) {
         forceSecurityDisconnect();
         return;
