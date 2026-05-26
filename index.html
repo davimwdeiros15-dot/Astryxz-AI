@@ -41,7 +41,6 @@
             --dev-panel-bg: rgba(10, 1, 1, 0.96);
         }
 
-        /* --- MODO DEV_CORE COM FUNDO DE GRADE E MATRIX BINÁRIO ATIVO --- */
         body.dev-mode {
             --bg-primary: #010101;
             --bg-base: #010101;
@@ -1188,6 +1187,33 @@ function removeLoader(){
     if(loader) loader.remove();
 }
 
+/* ADICIONADA A FUNÇÃO DE DIGITAÇÃO PARA ELIMINAR O ERRO DO CONSOLE */
+async function typeMessage(text) {
+    const container = document.createElement("div");
+    container.className = "msg-container";
+    
+    const avatar = document.createElement("div");
+    avatar.className = "avatar ai-avatar";
+    avatar.innerText = isDevMode ? "D" : "N";
+    container.appendChild(avatar);
+
+    const div = document.createElement("div");
+    div.className = "msg ai";
+    const p = document.createElement("p");
+    div.appendChild(p);
+    container.appendChild(div);
+    chat.appendChild(container);
+
+    let currentText = "";
+    for (let i = 0; i < text.length; i++) {
+        currentText += text[i];
+        p.innerHTML = parseMarkdown(currentText);
+        chat.scrollTop = chat.scrollHeight;
+        await new Promise(resolve => setTimeout(resolve, 12)); 
+    }
+    triggerMathRender();
+}
+
 async function askAI(message, imageBase64){
     try {
         const selectedModel = document.getElementById("modelSelect").value;
@@ -1244,7 +1270,8 @@ async function run(){
     const aiResponse = await askAI(text, imageToSend);
     removeLoader();
     
-    addMessage(aiResponse, "ai");
+    /* CHAMA A FUNÇÃO INTEGRADA CORRETAMENTE SEM ERROS */
+    await typeMessage(aiResponse);
 
     localHistory.unshift({ userInput: text || "📷 Imagem", aiOutput: aiResponse });
     renderHistory();
