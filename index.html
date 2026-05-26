@@ -831,7 +831,7 @@
     <div class="welcome-screen" id="welcomeScreen">
         <h1 class="welcome-title" id="welcomeTitle">Conexão Estabelecida</h1>
         <p class="welcome-subtitle" id="welcomeSubtitle">O que vamos analisar ou criar hoje?</p>
-        <div class="welcome-version">versão 00.03</div>
+        <div class="welcome-version">versão 00.005</div>
     </div>
 
     <div class="chat" id="chat"></div>
@@ -1118,6 +1118,7 @@ function transitionToChatMode() {
     }
 }
 
+// ... Resto das funções auxiliares mantidas intactas para estabilidade ...
 function addMessage(text, type, imgData = ""){
     const container = document.createElement("div");
     container.className = "msg-container " + (type === "user" ? "user-container" : "");
