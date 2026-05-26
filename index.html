@@ -549,7 +549,7 @@
         }
 
         .welcome-subtitle { color: #475569; font-size: 15px; letter-spacing: 0.5px; margin-bottom: 8px; }
-        .welcome-version { font-size: 11px; font-weight: 700; color: var(--accent-primary); letter-spacing: 2px; opacity: 0.7; text-transform: uppercase; }
+        .welcome-version { font-size: 13px; font-weight: 700; color: var(--accent-primary); letter-spacing: 2px; opacity: 0.9; text-transform: uppercase; margin-top: 10px; }
 
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-15px); }
@@ -1068,6 +1068,7 @@ function closeSidebarOnOutsideClick(e) {
 
 /* MARCDOWN E LATEX */
 function parseMarkdown(text) {
+    if (!text) return "";
     let html = text;
     html = html.replace(/\\\[([\s\S]*?)\\\]/g, function(match, formula) {
         return '\\[ ' + formula.replace(/\n/g, ' __BLOCK_NL__ ') + ' \\]';
@@ -1079,7 +1080,6 @@ function parseMarkdown(text) {
     html = html.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     
-    // Evita injetar quebras de linhas brutas em tags estruturadas
     html = html.replace(/\n/g, '<br>');
     html = html.replace(/__BLOCK_NL__/g, '\n').replace(/__INLINE_NL__/g, '\n');
     return html;
@@ -1156,6 +1156,7 @@ function addMessage(text, type, imgData = ""){
 }
 
 async function typeMessage(text){
+    if (!text) return;
     const container = document.createElement("div");
     container.className = "msg-container";
 
@@ -1247,16 +1248,21 @@ async function askAI(message, imageBase64){
 
         const data = await response.json();
         
-        if (!response.ok || data.error) {
-            const errMsg = data.error ? data.error.message : "Erro desconhecido HTTP " + response.status;
-            return "### [ERRO DE TRANSMISSÃO]\n" + errMsg + "\n\n*Verifique se o seu saldo ou chave API ainda estão ativos no OpenRouter.*";
+        if (!response.ok || !data || data.error) {
+            let errMsg = "Erro de resposta da API.";
+            if (data && data.error) {
+                errMsg = typeof data.error === 'object' ? (data.error.message || JSON.stringify(data.error)) : data.error;
+            } else if (response.status) {
+                errMsg = "Erro HTTP " + response.status;
+            }
+            return "### [ERRO DE TRANSMISSÃO]\n" + errMsg + "\n\n*Nota: Se sua chave de API foi revogada automaticamente por vazamento, você precisará gerar uma nova chave no OpenRouter.*";
         }
         
-        return data.choices?.[0]?.message?.content || "Sem resposta.";
+        return data.choices?.[0]?.message?.content || "Sem resposta retornada do modelo.";
     }
     catch(error) {
         console.error(error);
-        return "### [ERRO CRÍTICO]\nFalha de conexão inter-estação. O servidor de IA não pôde ser alcançado.";
+        return "### [ERRO CRÍTICO]\nFalha de conexão física com os servidores da IA: " + error.message;
     }
 }
 
@@ -1276,10 +1282,12 @@ async function run(){
     showLoader();
     const aiResponse = await askAI(text, imageToSend);
     removeLoader();
-    await typeMessage(aiResponse);
-
-    localHistory.unshift({ userInput: text || "📷 Transmissão Visual", aiOutput: aiResponse });
-    renderHistory();
+    
+    if (aiResponse) {
+        await typeMessage(aiResponse);
+        localHistory.unshift({ userInput: text || "📷 Transmissão Visual", aiOutput: aiResponse });
+        renderHistory();
+    }
 }
 
 function renderHistory(){
