@@ -23,6 +23,7 @@
 
     <style>
         :root {
+            /* Tema Padrão: Laranja Cyberpunk */
             --bg-primary: #050200;
             --bg-grid: rgba(249, 115, 22, 0.025);
             --bg-gradient-1: rgba(249, 115, 22, 0.08);
@@ -42,6 +43,76 @@
             --dev-panel-bg: rgba(8, 2, 0, 0.98);
             --glass-bg: rgba(15, 5, 2, 0.7);
             --glass-border: rgba(249, 115, 22, 0.12);
+            --particle-color: #f97316;
+        }
+
+        /* --- TEMA CLIMA (AZUL / CHUVA / ATMOSFÉRICO) --- */
+        body.theme-clima {
+            --bg-primary: #020813;
+            --bg-grid: rgba(56, 189, 248, 0.025);
+            --bg-gradient-1: rgba(14, 165, 233, 0.1);
+            --bg-gradient-2: rgba(30, 41, 59, 0.4);
+            --bg-base: #01040a;
+            --accent-primary: #0ea5e9;
+            --accent-secondary: #38bdf8;
+            --accent-glow: rgba(14, 165, 233, 0.25);
+            --border-color: rgba(14, 165, 233, 0.15);
+            --btn-gradient: linear-gradient(135deg, #0ea5e9, #0284c7);
+            --text-glow: linear-gradient(135deg, #ffffff 20%, #e0f2fe 60%, #0ea5e9 100%);
+            --avatar-bg: linear-gradient(135deg, #0ea5e9, #0284c7);
+            --msg-user-bg: rgba(14, 165, 233, 0.08);
+            --msg-user-border: rgba(14, 165, 233, 0.2);
+            --sidebar-header-border: rgba(14, 165, 233, 0.2);
+            --sidebar-header-bg: rgba(14, 165, 233, 0.03);
+            --glass-bg: rgba(2, 8, 19, 0.75);
+            --glass-border: rgba(14, 165, 233, 0.12);
+            --particle-color: #38bdf8;
+        }
+
+        /* --- TEMA PLANTAS / NATUREZA (VERDE ORGÂNICO) --- */
+        body.theme-natureza {
+            --bg-primary: #020f04;
+            --bg-grid: rgba(34, 197, 94, 0.025);
+            --bg-gradient-1: rgba(34, 197, 94, 0.1);
+            --bg-gradient-2: rgba(20, 83, 45, 0.3);
+            --bg-base: #010501;
+            --accent-primary: #22c55e;
+            --accent-secondary: #4ade80;
+            --accent-glow: rgba(34, 197, 94, 0.25);
+            --border-color: rgba(34, 197, 94, 0.15);
+            --btn-gradient: linear-gradient(135deg, #22c55e, #16a34a);
+            --text-glow: linear-gradient(135deg, #ffffff 20%, #dcfce7 60%, #22c55e 100%);
+            --avatar-bg: linear-gradient(135deg, #22c55e, #16a34a);
+            --msg-user-bg: rgba(34, 197, 94, 0.08);
+            --msg-user-border: rgba(34, 197, 94, 0.2);
+            --sidebar-header-border: rgba(34, 197, 94, 0.2);
+            --sidebar-header-bg: rgba(34, 197, 94, 0.03);
+            --glass-bg: rgba(2, 10, 4, 0.75);
+            --glass-border: rgba(34, 197, 94, 0.12);
+            --particle-color: #4ade80;
+        }
+
+        /* --- TEMA ESPAÇO (ROXO CÓSMICO / ESTRELAR) --- */
+        body.theme-espaco {
+            --bg-primary: #04010a;
+            --bg-grid: rgba(168, 85, 247, 0.025);
+            --bg-gradient-1: rgba(168, 85, 247, 0.09);
+            --bg-gradient-2: rgba(79, 70, 229, 0.06);
+            --bg-base: #010003;
+            --accent-primary: #a855f7;
+            --accent-secondary: #c084fc;
+            --accent-glow: rgba(168, 85, 247, 0.25);
+            --border-color: rgba(168, 85, 247, 0.15);
+            --btn-gradient: linear-gradient(135deg, #a855f7, #7c3aed);
+            --text-glow: linear-gradient(135deg, #ffffff 20%, #f3e8ff 60%, #a855f7 100%);
+            --avatar-bg: linear-gradient(135deg, #a855f7, #7c3aed);
+            --msg-user-bg: rgba(168, 85, 247, 0.08);
+            --msg-user-border: rgba(168, 85, 247, 0.2);
+            --sidebar-header-border: rgba(168, 85, 247, 0.2);
+            --sidebar-header-bg: rgba(168, 85, 247, 0.03);
+            --glass-bg: rgba(4, 1, 10, 0.75);
+            --glass-border: rgba(168, 85, 247, 0.12);
+            --particle-color: #c084fc;
         }
 
         /* --- MODO DEV_CORE COM FUNDO DE GRADE VERMELHA --- */
@@ -59,6 +130,7 @@
             --bg-grid: rgba(255, 17, 17, 0.03);
             --glass-bg: rgba(15, 1, 1, 0.8);
             --glass-border: rgba(255, 17, 17, 0.2);
+            --particle-color: #ff4444;
         }
 
         * {
@@ -76,7 +148,7 @@
             overflow: hidden;
             display: flex;
             position: relative;
-            transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body::before {
@@ -91,7 +163,7 @@
                 linear-gradient(180deg, var(--bg-base) 0%, var(--bg-primary) 100%);
             background-size: 50px 50px, 50px 50px, 100% 100%, 100% 100%, 100% 100%;
             z-index: -3;
-            transition: all 0.5s ease;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body.dev-mode::before {
@@ -100,6 +172,38 @@
                 linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px),
                 linear-gradient(180deg, #010101 0%, #010101 100%);
             background-size: 32px 32px, 32px 32px, 100% 100%;
+        }
+
+        /* Camadas de fundo virtuais adicionais para temas específicos */
+        .background-overlay-effects {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        /* Nuvens dinâmicas apenas no tema clima */
+        .weather-clouds {
+            position: absolute;
+            top: 10%;
+            left: -20%;
+            width: 140%;
+            height: 30%;
+            background: radial-gradient(ellipse at center, rgba(14, 165, 233, 0.05) 0%, transparent 70%);
+            filter: blur(40px);
+            opacity: 0;
+            transition: opacity 1s ease;
+            animation: moveClouds 40s linear infinite;
+        }
+        body.theme-clima .weather-clouds {
+            opacity: 1;
+        }
+
+        @keyframes moveClouds {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-10%); }
+            100% { transform: translateX(0); }
         }
 
         #devMatrixCanvas {
@@ -144,15 +248,11 @@
             position: absolute;
             width: 2px;
             height: 2px;
-            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
+            background: var(--particle-color);
             border-radius: 50%;
             opacity: .35;
+            transition: background 0.8s ease, transform 0.5s, width 0.5s, height 0.5s, border-radius 0.5s;
             animation: float linear infinite;
-        }
-
-        @keyframes float {
-            from { transform: translateY(105vh) scale(0.8); }
-            to { transform: translateY(-5vh) scale(1.2); }
         }
 
         /* TELA DE LOGIN */
@@ -709,7 +809,7 @@
         .dev-panel-close:hover { background: rgba(255, 255, 255, 0.05); }
 
         .dev-card { background: rgba(20, 2, 2, 0.5); border: 1px solid rgba(255, 17, 17, 0.15); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-        .dev-card-title { font-size: 11px; font-weight: 800; color: #cbd5e1; font-family: monospace; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; letter-spacing: 0.5px; }
+        .dev-card-title { font-size: 11px; font-weight: 800; color: #cbd5e1; font-family: monospace; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px; letter-spacing: 0.5px; }
 
         .dev-stats-row { display: flex; justify-content: space-between; font-size: 11px; font-family: monospace; color: #cbd5e1; }
         .dev-bar-container { width: 100%; height: 6px; background: rgba(255,255,255,0.03); border-radius: 3px; overflow: hidden; margin-top: 2px; border: 1px solid rgba(255,255,255,0.03); }
@@ -720,7 +820,7 @@
 
         .dev-code-block { 
             background: #030000; 
-            border: 1px solid rgba(255,17,17,0.2); 
+            border: 1px solid rgba(255, 17, 17, 0.2); 
             border-radius: 8px; 
             padding: 12px; 
             font-family: monospace; 
@@ -800,6 +900,11 @@
 <body>
 
     <canvas id="devMatrixCanvas"></canvas>
+
+    <!-- Camadas adicionais de efeitos para os temas dinâmicos -->
+    <div class="background-overlay-effects">
+        <div class="weather-clouds"></div>
+    </div>
 
     <!-- TELA DE LOGIN -->
     <div class="login-screen" id="loginScreen">
@@ -982,6 +1087,9 @@
 // Chave padrão do OpenRouter atualizada com a credencial ativa do utilizador
 const DEFAULT_API_KEY = "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";
 
+// Lista que armazena todo o contexto de conversa ativo para enviar à API (Memória)
+let conversationContext = [];
+
 // Função para obter a chave ativa (Customizada ou Padrão)
 function getActiveApiKey() {
     const customKey = localStorage.getItem("nox_custom_api_key");
@@ -1017,6 +1125,8 @@ let isFirstMessage = true;
 let currentUsername = "";
 let selectedImageBase64 = ""; 
 let isDevMode = false;
+let currentTheme = 'default';
+let userMatchedTheme = false; // Bloqueador para evitar que a resposta da IA quebre a tua intenção de tema
 
 // Preenche o campo da chave se já houver uma guardada
 if (localStorage.getItem("nox_custom_api_key")) {
@@ -1033,6 +1143,91 @@ function saveCustomApiKey() {
         alert("Configuração limpa. A usar a chave padrão do sistema.");
     }
 }
+
+/* --- DETETOR DE TEMAS DINÂMICOS BASEADO NO TEXTO --- */
+function checkTextForTheme(text, isUser = false) {
+    if (!text) return;
+    const lowerText = text.toLowerCase();
+    
+    // Palavras-chave de Clima / Atmosfera / Chuva
+    const climaWords = ['clima', 'tempo', 'chuva', 'nuvem', 'sol', 'tempestade', 'neve', 'vento', 'frio', 'calor', 'trovão', 'atmosfera', 'rain', 'weather', 'storm', 'snow'];
+    // Palavras-chave de Natureza / Plantas / Ecologia
+    const naturezaWords = ['planta', 'verde', 'árvore', 'flor', 'floresta', 'natureza', 'folha', 'jardim', 'selva', 'ecossistema', 'biologia', 'terra', 'plant', 'tree', 'flower', 'green', 'leaf', 'nature', 'forest'];
+    // Palavras-chave de Espaço / Estrelas / Astrologia / Universo
+    const espacoWords = ['espaço', 'estrela', 'galáxia', 'universo', 'planeta', 'lua', 'astronauta', 'foguete', 'cosmos', 'órbita', 'marte', 'buraco negro', 'space', 'star', 'galaxy', 'universe', 'planet', 'moon'];
+
+    // Função de correspondência exata de palavras em português para evitar falsos positivos por substrings (ex: solo contendo "sol")
+    function containsWord(fullText, word) {
+        const escaped = word.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        // Usa Lookbehinds e Lookaheads para capturar limites de palavra incluindo caracteres acentuados
+        const regex = new RegExp('(?<=^|[^a-zA-Z0-9áéíóúâêôãõçàèìòùäëïöüñ])' + escaped + '(?=[^a-zA-Z0-9áéíóúâêôãõçàèìòùäëïöüñ]|$)', 'i');
+        return regex.test(fullText);
+    }
+
+    let matchedTheme = 'default';
+
+    // Priorizamos o tema natureza antes do tema clima e usamos correspondência de palavra exata
+    if (naturezaWords.some(word => containsWord(lowerText, word))) {
+        matchedTheme = 'natureza';
+    } else if (climaWords.some(word => containsWord(lowerText, word))) {
+        matchedTheme = 'clima';
+    } else if (espacoWords.some(word => containsWord(lowerText, word))) {
+        matchedTheme = 'espaco';
+    }
+
+    if (isUser) {
+        if (matchedTheme !== 'default') {
+            userMatchedTheme = true;
+            changeTheme(matchedTheme);
+        } else {
+            userMatchedTheme = false;
+            changeTheme('default');
+        }
+    } else {
+        // Se for resposta da IA, só mudamos o tema se o utilizador não tiver ativado um tema específico explicitamente
+        if (!userMatchedTheme && matchedTheme !== currentTheme) {
+            changeTheme(matchedTheme);
+        }
+    }
+}
+
+function changeTheme(themeName) {
+    // Remove rigorosa e sequencialmente todas as classes de temas anteriores do body
+    document.body.classList.remove('theme-clima', 'theme-natureza', 'theme-espaco');
+    currentTheme = themeName;
+
+    // Aplica a classe correspondente se não for o tema padrão (default)
+    if (themeName !== 'default') {
+        document.body.classList.add('theme-' + themeName);
+    }
+
+    // Reinicializa o sistema de partículas para que o comportamento físico e cor mudem de imediato
+    initParticles();
+}
+
+/* --- ADICIONA ESTILOS DE ANIMAÇÃO DINÂMICOS PARA OS TEMAS --- */
+const styleSheet = document.createElement("style");
+styleSheet.innerText = `
+    @keyframes rainFall {
+        from { transform: translateY(-20vh) translateX(0); opacity: 0; }
+        30% { opacity: 0.6; }
+        80% { opacity: 0.6; }
+        to { transform: translateY(110vh) translateX(12px); opacity: 0; }
+    }
+    @keyframes leafFloat {
+        0% { transform: translateY(105vh) translateX(0) rotate(0deg); opacity: 0; }
+        15% { opacity: 0.6; }
+        85% { opacity: 0.6; }
+        100% { transform: translateY(-10vh) translateX(40px) rotate(360deg); opacity: 0; }
+    }
+    @keyframes starTwinkle {
+        0% { transform: translateY(105vh) scale(0.5); opacity: 0.1; }
+        50% { opacity: 0.8; transform: translateY(50vh) scale(1.3); }
+        100% { transform: translateY(-10vh) scale(0.5); opacity: 0.1; }
+    }
+`;
+document.head.appendChild(styleSheet);
+
 
 /* --- MOTOR DO MATRIX BINÁRIO ANIMADO --- */
 const canvas = document.getElementById("devMatrixCanvas");
@@ -1177,19 +1372,59 @@ async function fetchWeather() {
 }
 fetchWeather();
 
-function initStation() {
-    loginScreen.style.display = "flex";
-    loginScreen.style.opacity = "1";
-    
+function initParticles() {
     const particlesContainer = document.getElementById("particles");
-    for (let i = 0; i < 25; i++) {
+    particlesContainer.innerHTML = '';
+    
+    // Determina a cor com base no tema ativo
+    let color = '#f97316'; // Laranja Padrão
+    if (currentTheme === 'clima') color = '#38bdf8';
+    if (currentTheme === 'natureza') color = '#4ade80';
+    if (currentTheme === 'espaco') color = '#c084fc';
+    if (isDevMode) color = '#ff4444';
+
+    // Criamos 45 partículas de ambiente dinâmicas com comportamento do tema
+    for (let i = 0; i < 45; i++) {
         const p = document.createElement("div");
         p.className = "particle";
         p.style.left = Math.random() * 100 + "vw";
-        p.style.animationDuration = (Math.random() * 5 + 5) + "s";
+        p.style.background = color;
+        
+        if (currentTheme === 'clima') {
+            p.style.borderRadius = '1px';
+            p.style.width = '1.5px';
+            p.style.height = '14px';
+            p.style.animationName = 'rainFall';
+            p.style.animationDuration = (Math.random() * 1.2 + 0.8) + 's';
+        } else if (currentTheme === 'natureza') {
+            p.style.borderRadius = '50% 0';
+            p.style.width = '7px';
+            p.style.height = '7px';
+            p.style.animationName = 'leafFloat';
+            p.style.animationDuration = (Math.random() * 7 + 5) + 's';
+        } else if (currentTheme === 'espaco') {
+            p.style.borderRadius = '50%';
+            p.style.width = Math.random() > 0.5 ? '2.5px' : '4px';
+            p.style.height = p.style.width;
+            p.style.animationName = 'starTwinkle';
+            p.style.animationDuration = (Math.random() * 10 + 6) + 's';
+        } else {
+            p.style.borderRadius = '50%';
+            p.style.width = '2.5px';
+            p.style.height = '2.5px';
+            p.style.animationName = 'float';
+            p.style.animationDuration = (Math.random() * 6 + 4) + 's';
+        }
+        
         p.style.animationDelay = (Math.random() * 5) + "s";
         particlesContainer.appendChild(p);
     }
+}
+
+function initStation() {
+    loginScreen.style.display = "flex";
+    loginScreen.style.opacity = "1";
+    initParticles();
 }
 
 function handleLogin() {
@@ -1221,6 +1456,7 @@ function handleLogout() {
     localStorage.removeItem("nox_username");
     usernameInput.value = "";
     disableDevMode();
+    changeTheme('default');
     loginScreen.style.display = "flex";
     setTimeout(() => { loginScreen.style.opacity = "1"; }, 50);
     clearChat();
@@ -1380,22 +1616,32 @@ async function askAI(message, imageBase64){
     try {
         const selectedModel = document.getElementById("modelSelect").value;
         const currentKey = getActiveApiKey();
-        let messagePayloadContent = [];
-
+        
+        // Constrói o novo conteúdo da mensagem do utilizador
+        let userMessageContent = [];
         if (imageBase64) {
             if (message) {
-                messagePayloadContent.push({ type: "text", text: message });
+                userMessageContent.push({ type: "text", text: message });
             }
-            messagePayloadContent.push({
+            userMessageContent.push({
                 type: "image_url",
                 image_url: { url: imageBase64 }
             });
         } else {
-            messagePayloadContent = message;
+            userMessageContent = message;
         }
+
+        // Adiciona a nova mensagem do utilizador à lista de contexto histórico
+        conversationContext.push({ role: "user", content: userMessageContent });
 
         const devSystemPrompt = `Você é o núcleo interno DEV_CORE da HTT. Respostas puramente cirúrgicas, técnicas e diretas com estilo hacker.`;
         const normalSystemPrompt = `Você é a HTT, uma inteligência artificial rápida, útil, limpa, amigável e segura para todas as idades. Organizada e direta.`;
+
+        // Prepara as mensagens que serão enviadas (System Prompt + Histórico Completo)
+        const requestMessages = [
+            { role: "system", content: isDevMode ? devSystemPrompt : normalSystemPrompt },
+            ...conversationContext
+        ];
 
         const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: "POST",
@@ -1406,14 +1652,14 @@ async function askAI(message, imageBase64){
             body: JSON.stringify({
                 model: selectedModel,
                 max_tokens: 2048, 
-                messages: [
-                    { role: "system", content: isDevMode ? devSystemPrompt : normalSystemPrompt }, 
-                    { role: "user", content: messagePayloadContent }
-                ]
+                messages: requestMessages
             })
         });
 
         if (!response.ok) {
+            // Remove a última mensagem enviada em caso de erro para evitar histórico corrompido
+            conversationContext.pop();
+            
             const errorData = await response.json();
             let rawError = errorData.error?.message || "Erro desconhecido na rede.";
             
@@ -1424,9 +1670,23 @@ async function askAI(message, imageBase64){
         }
 
         const data = await response.json();
-        return data.choices?.[0]?.message?.content || "Sem resposta.";
+        const assistantResponse = data.choices?.[0]?.message?.content || "Sem resposta.";
+
+        // Guarda a resposta do assistente no histórico de contexto
+        conversationContext.push({ role: "assistant", content: assistantResponse });
+
+        // Limita o histórico para as últimas 12 mensagens para economizar tokens sem perder o fio da conversa
+        if (conversationContext.length > 12) {
+            conversationContext = conversationContext.slice(conversationContext.length - 12);
+        }
+
+        return assistantResponse;
     } catch(error) { 
         console.error(error);
+        // Remove a mensagem em caso de falha de conexão física
+        if (conversationContext.length > 0 && conversationContext[conversationContext.length - 1].role === "user") {
+            conversationContext.pop();
+        }
         return "Erro de transmissão de pacotes. Verifique as suas configurações de rede."; 
     }
 }
@@ -1435,6 +1695,9 @@ async function run(){
     const text = input.value.trim();
     const imageToSend = selectedImageBase64; 
     if(!text && !imageToSend) return;
+
+    // Deteta o tema com base no texto enviado antes de processar
+    checkTextForTheme(text, true); // Indica que é o utilizador para fixar o tema
 
     transitionToChatMode();
     addMessage(text, "user", imageToSend);
@@ -1446,6 +1709,10 @@ async function run(){
     showLoader();
     const aiResponse = await askAI(text, imageToSend);
     removeLoader();
+    
+    // Deteta o tema também com base na resposta da IA
+    checkTextForTheme(aiResponse, false); // Indica que é a IA, logo não substitui se o utilizador já escolheu
+    
     await typeMessage(aiResponse);
 
     localHistory.unshift({ userInput: text || "📷 Imagem", aiOutput: aiResponse });
@@ -1461,8 +1728,16 @@ function renderHistory(){
         button.onclick = () => {
             transitionToChatMode();
             chat.innerHTML = "";
+            checkTextForTheme(item.userInput, true);
             addMessage(item.userInput, "user");
             addMessage(item.aiOutput, "ai");
+            
+            // Sincroniza a memória local com a conversa clicada para o utilizador continuar daí
+            conversationContext = [
+                { role: "user", content: item.userInput },
+                { role: "assistant", content: item.aiOutput }
+            ];
+            
             closeSidebar();
         };
         historyList.appendChild(button);
@@ -1476,6 +1751,9 @@ function clearChat(){
     welcomeScreen.style.opacity = "1";
     bottomContainer.classList.add("centered");
     isFirstMessage = true;
+    conversationContext = []; // Limpa toda a memória ativa
+    userMatchedTheme = false; // Reset ao bloqueador de temas do utilizador
+    changeTheme('default');
     closeSidebar();
 }
 
