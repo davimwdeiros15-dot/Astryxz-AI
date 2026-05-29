@@ -228,6 +228,11 @@
             50% { opacity: 0.35; }
             100% { opacity: 0.15; }
         }
+        @keyframes voiceBallPulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(168, 85, 247, 0.6), inset 0 0 10px rgba(168, 85, 247, 0.4); }
+            50% { transform: scale(1.15); box-shadow: 0 0 45px rgba(168, 85, 247, 0.9), inset 0 0 20px rgba(168, 85, 247, 0.7); }
+            100% { transform: scale(1); box-shadow: 0 0 20px rgba(168, 85, 247, 0.6), inset 0 0 10px rgba(168, 85, 247, 0.4); }
+        }
 
         /* Transições de overlays */
         body.theme-sakura #sakuraForestBg { opacity: 0.35 !important; }
@@ -852,6 +857,17 @@
         .ai { color: #e2e8f0; border-radius: 4px 18px 18px 18px; background: rgba(255, 255, 255, 0.015); border: 1px solid rgba(255, 255, 255, 0.03); }
         .ai h3 { margin-bottom: 8px; color: var(--accent-primary); font-size: 15px; font-weight: 800; letter-spacing: 0.5px; }
 
+        /* Cursor piscante de digitação */
+        .typing-cursor::after {
+            content: "█";
+            animation: cursorBlink 0.8s steps(2, start) infinite;
+            color: var(--accent-primary);
+            margin-left: 2px;
+        }
+        @keyframes cursorBlink {
+            to { visibility: hidden; }
+        }
+
         .chat-image { max-width: 100%; max-height: 320px; border-radius: 14px; margin-top: 10px; border: 1px solid rgba(255, 255, 255, 0.08); object-fit: contain; }
 
         /* ABA INFERIOR / CAIXA DE TEXTO */
@@ -897,16 +913,16 @@
         }
         textarea::placeholder { color: #64748b; }
 
-        .btn-attach, .btn-send {
+        .btn-attach, .btn-send, .btn-voice {
             background: transparent; border: none; color: #94a3b8; width: 36px; height: 36px;
             border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
             transition: all 0.2s;
         }
-        .btn-attach:hover { color: var(--accent-primary); background: rgba(157, 78, 221, 0.06); }
+        .btn-attach:hover, .btn-voice:hover { color: var(--accent-primary); background: rgba(157, 78, 221, 0.06); }
         .btn-send { color: #ffffff; background: var(--btn-gradient); }
         .btn-send:hover { transform: scale(1.05); box-shadow: 0 0 15px var(--accent-glow); }
         .btn-send:active { transform: scale(0.98); }
-        .btn-attach svg, .btn-send svg { width: 18px; height: 18px; fill: currentColor; }
+        .btn-attach svg, .btn-send svg, .btn-voice svg { width: 18px; height: 18px; fill: currentColor; }
 
         /* LOADER / PONTOS DE DIGITAÇÃO */
         .loader { display: flex; gap: 6px; padding: 10px 0; align-items: center; }
@@ -996,6 +1012,83 @@
             object-fit: cover;
         }
 
+        /* --- TELA PRETA DO MICROFONE / VOICE ASSISTANT OVERLAY --- */
+        #voiceOverlay {
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            z-index: 500;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #voiceOverlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        .voice-ball-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        .voice-ball {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #c77dff 0%, #7b2cbf 70%, #5a189a 100%);
+            animation: voiceBallPulse 2s infinite ease-in-out;
+            z-index: 2;
+        }
+        .voice-particle-ring {
+            position: absolute;
+            inset: 0;
+            border: 1px dashed rgba(168, 85, 247, 0.4);
+            border-radius: 50%;
+            animation: gearRotateCW 8s linear infinite;
+        }
+        .voice-status-text {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-align: center;
+            margin-bottom: 12px;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+        }
+        .voice-transcript {
+            color: #cbd5e1;
+            font-size: 15px;
+            font-style: italic;
+            text-align: center;
+            max-width: 80%;
+            line-height: 1.5;
+            min-height: 45px;
+        }
+        .voice-close-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #cbd5e1;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .voice-close-btn:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
         /* ========================================================
            SUPORTE RESPONSIVO MÓVEL EXTRAORDINÁRIO (MOBILE FIRST)
            ======================================================== */
@@ -1049,16 +1142,15 @@
 
 <body>
 
-    <!-- Elementos Dinâmicos de Background (Sakura, Wave, Modo Livre) -->
-    <!-- z-index ajustado para -2 para ficar acima de body::before (-3) e visível sob o grid -->
+    <!-- Elementos Dinâmicos de Background com Aspect-Ratio Corrigido para PC e Telemóvel -->
     <div id="freeModeContainer" style="position: fixed; inset: 0; z-index: -2; pointer-events: none; display: none;">
         <img id="freeModeImg" style="width: 100%; height: 100%; object-fit: cover; display: none;">
         <video id="freeModeVideo" loop muted autoplay playsinline style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
     </div>
 
-    <!-- TEMA CYBERPUNK RETRÔ (Múltiplas engrenagens mecânicas interligadas e Grade Synthwave) -->
+    <!-- TEMA CYBERPUNK RETRÔ (Garante que as engrenagens fiquem sempre no centro em qualquer proporção de ecrã) -->
     <div id="cyberRetroBg">
-        <svg viewBox="0 0 1000 600" width="100%" height="100%" preserveAspectRatio="none" style="position: absolute; inset: 0;">
+        <svg viewBox="0 0 1000 600" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0;">
             <!-- Grade perspectiva synthwave retro -->
             <path d="M 0 450 L 1000 450 M 0 470 L 1000 470 M 0 500 L 1000 500 M 0 540 L 1000 540 M 0 600 L 1000 600" stroke="var(--accent-primary)" stroke-width="2.5" fill="none"/>
             <path d="M 100 450 L 0 600 M 300 450 L 200 600 M 500 450 L 500 600 M 700 450 L 800 600 M 900 450 L 1000 600" stroke="var(--accent-primary)" stroke-width="1.8" fill="none"/>
@@ -1067,7 +1159,6 @@
             <g transform="translate(500, 220)" style="animation: gearRotateCW 30s linear infinite; transform-origin: 500px 220px; opacity: 0.22;">
                 <circle cx="500" cy="220" r="100" fill="none" stroke="var(--accent-primary)" stroke-width="14"/>
                 <circle cx="500" cy="220" r="50" fill="none" stroke="var(--accent-primary)" stroke-width="6"/>
-                <!-- Dentes da Engrenagem -->
                 <path d="M 485 100 L 515 100 L 522 125 L 478 125 Z" fill="var(--accent-primary)"/>
                 <path d="M 485 100 L 515 100 L 522 125 L 478 125 Z" fill="var(--accent-primary)" transform="rotate(30 500 220)"/>
                 <path d="M 485 100 L 515 100 L 522 125 L 478 125 Z" fill="var(--accent-primary)" transform="rotate(60 500 220)"/>
@@ -1082,7 +1173,7 @@
                 <path d="M 485 100 L 515 100 L 522 125 L 478 125 Z" fill="var(--accent-primary)" transform="rotate(330 500 220)"/>
             </g>
 
-            <!-- Engrenagem Acoplada Secundária 2 (Média, Anti-horário, engata com a 1) -->
+            <!-- Engrenagem Acoplada Secundária 2 (Média, Anti-horário) -->
             <g transform="translate(680, 275)" style="animation: gearRotateCCW 20s linear infinite; transform-origin: 680px 275px; opacity: 0.18;">
                 <circle cx="680" cy="275" r="70" fill="none" stroke="var(--accent-secondary)" stroke-width="10"/>
                 <circle cx="680" cy="275" r="30" fill="none" stroke="var(--accent-secondary)" stroke-width="4"/>
@@ -1096,7 +1187,7 @@
                 <path d="M 669 193 L 691 193 L 696 210 L 664 210 Z" fill="var(--accent-secondary)" transform="rotate(315 680 275)"/>
             </g>
 
-            <!-- Engrenagem Auxiliar Superior 3 (Pequena, Horário, no canto superior esquerdo) -->
+            <!-- Engrenagem Auxiliar Superior 3 (Pequena, Horário) -->
             <g transform="translate(340, 130)" style="animation: gearRotateCW 12s linear infinite; transform-origin: 340px 130px; opacity: 0.15;">
                 <circle cx="340" cy="130" r="45" fill="none" stroke="var(--accent-primary)" stroke-width="7"/>
                 <circle cx="340" cy="130" r="18" fill="none" stroke="var(--accent-primary)" stroke-width="3"/>
@@ -1125,22 +1216,22 @@
         </svg>
     </div>
 
-    <!-- TEMA CLIMA: RAIOS E TEMPESTADE -->
+    <!-- TEMA CLIMA: RAIOS E TEMPESTADE (Ativado de forma limpa) -->
     <div id="lightningEffect" style="position: fixed; inset: 0; z-index: -1; pointer-events: none; display: none; animation: lightningFlash 5s infinite;"></div>
 
-    <!-- TEMA WAVE INTEGRADO: OCEANO AMPLO COM ONDAS E CHUVA (SEM BARCO) -->
+    <!-- TEMA WAVE INTEGRADO: OCEANO AMPLO COM ONDAS E CHUVA (Suave e proporcional em PC/Mobile) -->
     <div id="waveBackground" style="position: fixed; inset: 0; z-index: -2; pointer-events: none; display: none; overflow: hidden;">
         <!-- Camada de Chuva Parallax -->
         <div id="waveRainContainer" style="position: absolute; inset: 0; opacity: 0.5;"></div>
 
-        <!-- Camadas de Ondas Gigantes do Mar SVG (Altura reduzida para 120px) -->
-        <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 120px; opacity: 0.9;">
+        <!-- Camadas de Ondas Gigantes do Mar SVG (Responsivo com preserveAspectRatio) -->
+        <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 120px; opacity: 0.95;">
             <svg viewBox="0 24 150 28" preserveAspectRatio="none" style="width: 100%; height: 100%;">
                 <defs>
                     <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
                 </defs>
                 <g>
-                    <use href="#gentle-wave" x="48" y="0" fill="#031e2c" opacity="0.7" style="animation: moveWave 14s cubic-bezier(.55,.5,.45,.5) infinite;" />
+                    <use href="#gentle-wave" x="48" y="0" fill="#031e2c" opacity="0.75" style="animation: moveWave 14s cubic-bezier(.55,.5,.45,.5) infinite;" />
                     <use href="#gentle-wave" x="48" y="2" fill="#085a70" opacity="0.5" style="animation: moveWave 10s cubic-bezier(.55,.5,.45,.5) infinite;" />
                     <use href="#gentle-wave" x="48" y="4" fill="#048fae" style="animation: moveWave 6s cubic-bezier(.55,.5,.45,.5) infinite;" />
                 </g>
@@ -1148,24 +1239,19 @@
         </div>
     </div>
 
-    <!-- TEMA SAKURA INTEGRADO: FLORESTA DE CEREJEIRAS E TEMPLO CHINÊS (PAGODA) -->
+    <!-- TEMA SAKURA INTEGRADO: FLORESTA DE CEREJEIRAS E TEMPLO CHINÊS (PAGODA) (Fundo corrigido com slice) -->
     <div id="sakuraForestBg" style="position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0; transition: opacity 1.2s ease, transform 1.2s ease; overflow: hidden; background: radial-gradient(circle at 75% 40%, rgba(253, 164, 189, 0.15) 0%, transparent 60%);">
-        <!-- Silhueta dos Templos, Montanhas e Árvores Japonesas/Chinesas -->
-        <svg viewBox="0 0 1000 600" width="100%" height="100%" preserveAspectRatio="none" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;">
+        <svg viewBox="0 0 1000 600" width="100%" height="100%" preserveAspectRatio="xMidYMax slice" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;">
             <!-- Montanhas ao Fundo -->
             <path d="M-50,600 L150,380 L350,600 M200,600 L450,310 L700,600 M600,600 L800,420 L950,600" fill="#1c0712" opacity="0.4" />
             <!-- Pagoda / Templo Imperial Chinês -->
             <g transform="translate(680, 160)" fill="#250917" stroke="#0e0208" stroke-width="1">
-                <!-- Base do Templo -->
                 <rect x="30" y="240" width="120" height="20" rx="3" />
                 <rect x="40" y="200" width="100" height="40" />
-                <!-- Telhado do Andar 1 -->
                 <path d="M20,200 Q90,185 160,200 L140,180 Q90,175 40,180 Z" />
                 <rect x="50" y="140" width="80" height="40" />
-                <!-- Telhado do Andar 2 -->
                 <path d="M30,140 Q90,128 150,140 L130,120 Q90,118 50,120 Z" />
                 <rect x="60" y="80" width="60" height="40" />
-                <!-- Cúpula Superior e Agulha -->
                 <path d="M40,80 Q90,70 140,80 L120,60 Q90,58 60,60 Z" />
                 <polygon points="90,60 90,0 87,3 87,60" />
                 <circle cx="90" cy="15" r="5" fill="#f43f5e" />
@@ -1180,9 +1266,8 @@
         </svg>
     </div>
 
-    <!-- TEMA VERDE: RADIAÇÃO ATÔMICA & ONDAS DE RAIO IONIZANTES -->
+    <!-- TEMA VERDE: RADIAÇÃO ATÔMICA & ONDAS DE RAIO IONIZANTES (Livre de bugs estéticos) -->
     <div id="radiationBg" style="position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0; transition: opacity 1.2s ease, transform 1.2s ease; overflow: hidden; background: radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.08) 0%, transparent 65%);">
-        <!-- Símbolo de Radiação Atômica Rotativo Central -->
         <div style="position: absolute; top: 50%; left: 50%; width: 500px; height: 500px; margin-left: -250px; margin-top: -250px; opacity: 0.15; transform-origin: center center; animation: radiationSpin 40s linear infinite, radiationPulseWave 5s ease-in-out infinite;">
             <svg viewBox="0 0 100 100" width="100%" height="100%" fill="var(--accent-primary)">
                 <circle cx="50" cy="50" r="10" />
@@ -1192,32 +1277,24 @@
             </svg>
         </div>
 
-        <svg viewBox="0 0 1000 600" width="100%" height="100%" preserveAspectRatio="none" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+        <svg viewBox="0 0 1000 600" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
             <path d="M-10,300 Q150,150 350,350 T750,250 T1010,400" fill="none" stroke="var(--accent-primary)" stroke-width="4" stroke-linecap="round" opacity="0.3" style="animation: radiationPulseWave 4s ease-in-out infinite alternate; filter: drop-shadow(0 0 12px var(--accent-primary));" />
             <path d="M-10,200 Q250,450 500,200 T1010,350" fill="none" stroke="var(--accent-secondary)" stroke-width="3" stroke-linecap="round" opacity="0.2" style="animation: radiationPulseWave 6s ease-in-out infinite alternate-reverse; filter: drop-shadow(0 0 8px var(--accent-secondary));" />
         </svg>
     </div>
 
-    <!-- TEMA ESPAÇO REPAGINADO (NEBULOSA DINÂMICA, LUA E PLANETA COM ANÉIS) -->
+    <!-- TEMA ESPAÇO REPAGINADO (Proporção estelar perfeita com slice) -->
     <div id="spaceCosmosBg" style="position: fixed; inset: 0; z-index: -2; pointer-events: none; display: none; overflow: hidden; background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.12) 0%, transparent 70%);">
-        <!-- Efeito Nebulosa Fluida -->
         <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 40%, rgba(168, 85, 247, 0.15) 0%, transparent 60%), radial-gradient(ellipse at 70% 60%, rgba(99, 102, 241, 0.18) 0%, transparent 60%); mix-blend-mode: screen; animation: nebulaPulse 10s ease-in-out infinite alternate;"></div>
         
-        <svg viewBox="0 0 1000 600" width="100%" height="100%" preserveAspectRatio="none" style="position: absolute; inset: 0;">
-            <!-- Planeta Gasoso Realçado com Anel Cósmico -->
+        <svg viewBox="0 0 1000 600" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0;">
+            <!-- Planeta Gasoso com Anel Cósmico Centralizado -->
             <g transform="translate(820, 420)">
-                <!-- Parte de trás do anel (desenhada primeiro para o planeta ficar à frente) -->
                 <path d="M -220,20 A 240,80 -25 0,1 210,-95" fill="none" stroke="rgba(199, 125, 255, 0.4)" stroke-width="22" style="filter: blur(2px);" />
                 <path d="M -220,20 A 240,80 -25 0,1 210,-95" fill="none" stroke="#e0aaff" stroke-width="12" />
-                
-                <!-- Corpo Principal do Planeta -->
                 <circle cx="0" cy="0" r="110" fill="url(#spacePlanetGrad)" stroke="var(--accent-primary)" stroke-width="1" style="filter: drop-shadow(0 0 30px rgba(157, 78, 221, 0.45));"/>
-                
-                <!-- Frente do anel (desenhada por cima do planeta para dar o efeito de profundidade) -->
                 <path d="M 210,-95 A 240,80 -25 0,1 -220,20" fill="none" stroke="rgba(199, 125, 255, 0.4)" stroke-width="22" style="filter: blur(2px);" />
                 <path d="M 210,-95 A 240,80 -25 0,1 -220,20" fill="none" stroke="#e0aaff" stroke-width="12" />
-                
-                <!-- Gradiente de cor do planeta gasoso -->
                 <defs>
                     <radialGradient id="spacePlanetGrad" cx="30%" cy="30%" r="70%">
                         <stop offset="0%" stop-color="#c77dff" />
@@ -1226,17 +1303,27 @@
                     </radialGradient>
                 </defs>
             </g>
-            <!-- Lua Cheia Realística -->
+            <!-- Lua Cheia no quadrante superior esquerdo -->
             <g transform="translate(180, 110)">
                 <circle cx="0" cy="0" r="35" fill="#f3e8ff" opacity="0.15" style="filter: blur(8px);"/>
                 <circle cx="0" cy="0" r="28" fill="#f5f0ff" opacity="0.9" style="filter: drop-shadow(0 0 18px rgba(199, 125, 255, 0.55));"/>
-                <!-- Crateras Lunares Estilizadas -->
                 <circle cx="-8" cy="-10" r="4.5" fill="#d8b4fe" opacity="0.45"/>
                 <circle cx="12" cy="6" r="6" fill="#d8b4fe" opacity="0.4"/>
                 <circle cx="-10" cy="12" r="3.5" fill="#d8b4fe" opacity="0.35"/>
                 <circle cx="2" cy="-4" r="2.5" fill="#d8b4fe" opacity="0.4"/>
             </g>
         </svg>
+    </div>
+
+    <!-- TELA PRETA DO ASSISTENTE DE VOZ (MICROFONE) -->
+    <div id="voiceOverlay">
+        <button class="voice-close-btn" onclick="deactivateVoiceSearch()">✕ Cancelar</button>
+        <div class="voice-ball-container">
+            <div class="voice-particle-ring"></div>
+            <div class="voice-ball"></div>
+        </div>
+        <div class="voice-status-text" id="voiceStatus">A escutar...</div>
+        <div class="voice-transcript" id="voiceTranscript">Aguardando áudio do operador...</div>
     </div>
 
     <div id="sakuraLeaves" style="position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; display: none;"></div>
@@ -1266,7 +1353,7 @@
         </div>
     </div>
 
-    <!-- SIDEBAR MÓVEL DRAWER -->
+    <!-- SIDEBAR DRAWER -->
     <div class="sidebar" id="sidebar">
         <div class="dashboard-widget">
             <div class="widget-time" id="widgetTime">00:00:00</div>
@@ -1298,7 +1385,6 @@
         </div>
     </div>
 
-    <!-- Overlay de toque para fechar a sidebar no mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
     <!-- PAINEL DEV -->
@@ -1396,7 +1482,6 @@
                     <span>Alterar Tema</span>
                 </div>
 
-                <!-- Modificado: onclick removido para que apenas desenvolvedores acessem via código secreto no Chat -->
                 <div class="status-badge" style="cursor: default;">
                     <div class="status-dot"></div>
                     <span id="statusText">Terminal Seguro</span>
@@ -1432,6 +1517,13 @@
 
                     <textarea id="input" placeholder="Transmita uma mensagem para o Astryxz..." autocomplete="off" rows="1" oninput="autoGrow(this)"></textarea>
                     
+                    <!-- Botão de Pesquisa por Voz -->
+                    <button class="btn-voice" onclick="activateVoiceSearch()" title="Pesquisa por voz">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                        </svg>
+                    </button>
+
                     <button class="btn-send" onclick="run()">
                         <svg viewBox="0 0 24 24">
                             <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
@@ -1531,6 +1623,7 @@ let selectedImageBase64 = "";
 let isDevMode = false;
 let currentTheme = 'default';
 let userMatchedTheme = false; // Bloqueador para evitar que a resposta da IA quebre a tua intenção de tema
+let recognition = null; // Variável global de controle do assistente de voz
 
 // Preenche o campo da chave se já houver uma guardada
 if (localStorage.getItem("nox_custom_api_key")) {
@@ -1563,14 +1656,12 @@ function checkTextForTheme(text, isUser = false) {
     // Função de correspondência exata de palavras em português para evitar falsos positivos por substrings (ex: solo contendo "sol")
     function containsWord(fullText, word) {
         const escaped = word.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        // Usa Lookbehinds e Lookaheads para capturar limites de palavra incluindo caracteres acentuados
         const regex = new RegExp('(?<=^|[^a-zA-Z0-9áéíóúâêôãõçàèìòùäëïöüñ])' + escaped + '(?=[^a-zA-Z0-9áéíóúâêôãõçàèìòùäëïöüñ]|$)', 'i');
         return regex.test(fullText);
     }
 
     let matchedTheme = 'default';
 
-    // Priorizamos o tema natureza antes do tema clima e usamos correspondência de palavra exata
     if (naturezaWords.some(word => containsWord(lowerText, word))) {
         matchedTheme = 'natureza';
     } else if (climaWords.some(word => containsWord(lowerText, word))) {
@@ -1588,7 +1679,6 @@ function checkTextForTheme(text, isUser = false) {
             changeTheme('default');
         }
     } else {
-        // Se for resposta da IA, só mudamos o tema se o utilizador não tiver ativado um tema específico explicitamente
         if (!userMatchedTheme && matchedTheme !== currentTheme) {
             changeTheme(matchedTheme);
         }
@@ -1596,7 +1686,6 @@ function checkTextForTheme(text, isUser = false) {
 }
 
 function changeTheme(themeName) {
-    // Remove rigorosa e sequencialmente todas as classes de temas anteriores do body
     document.body.classList.remove('theme-clima', 'theme-natureza', 'theme-espaco', 'theme-sakura', 'theme-wave', 'theme-rgb');
     currentTheme = themeName;
 
@@ -1678,7 +1767,6 @@ function generateSakuraPetals() {
     const leavesContainer = document.getElementById("sakuraLeaves");
     if (!leavesContainer) return;
     leavesContainer.innerHTML = "";
-    // Gera 15 pétalas sakura flutuantes na tela
     for(let i = 0; i < 15; i++) {
         const leaf = document.createElement("div");
         leaf.style.position = "absolute";
@@ -1702,7 +1790,6 @@ function generateSakuraPetals() {
     }
 }
 
-// Cria efeito de chuva dinâmico para o tema Wave
 function generateWaveRain() {
     const rainContainer = document.getElementById("waveRainContainer");
     if (!rainContainer) return;
@@ -1726,12 +1813,10 @@ function generateWaveRain() {
     }
 }
 
-// Manipulador de Upload do Modo Livre
 function handleFreeModeFile(inputElement) {
     const file = inputElement.files[0];
     if (!file) return;
 
-    // Filtro contra arquivos com conteúdo inapropriado/adulto (+18/NSFW)
     const inappropriateTerms = ["18+", "adulto", "porn", "xxx", "hentai", "nude", "naked", "sex", "gore", "safada", "sexy"];
     const fileNameCheck = file.name.toLowerCase();
     const matchesGuidelinesViolation = inappropriateTerms.some(term => fileNameCheck.includes(term));
@@ -1746,7 +1831,6 @@ function handleFreeModeFile(inputElement) {
     reader.onload = function (e) {
         const fileData = e.target.result;
         
-        // Remove temas anteriores para carregar o modo livre de forma limpa
         changeTheme('default');
         
         const imgEl = document.getElementById("freeModeImg");
@@ -1784,7 +1868,7 @@ function closeSafetyAlert() {
     document.getElementById("safetyAlert").style.display = "none";
 }
 
-// CORREÇÃO ROBUSTA E GARANTIDA DO RELÓGIO
+// CORREÇÃO DO RELÓGIO (Garante execução síncrona imediata)
 function updateClock() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
@@ -1797,11 +1881,10 @@ function updateClock() {
     }
 }
 
-// Inicia o relógio assim que o script é lido e garante execução repetitiva
+// Inicia imediatamente o relógio para evitar atrasos na interface
 updateClock();
 setInterval(updateClock, 500);
 
-// Executa também após o carregamento total do DOM
 document.addEventListener("DOMContentLoaded", () => {
     updateClock();
     setInterval(updateClock, 1000);
@@ -1835,8 +1918,7 @@ function initParticles() {
     if (!particlesContainer) return;
     particlesContainer.innerHTML = '';
     
-    // Determina a cor com base no tema ativo
-    let color = '#9d4edd'; // Roxo Padrão Astryxz
+    let color = '#9d4edd'; 
     if (currentTheme === 'clima') color = '#38bdf8';
     if (currentTheme === 'natureza') color = '#4ade80';
     if (currentTheme === 'espaco') color = '#c084fc';
@@ -1844,7 +1926,6 @@ function initParticles() {
     if (currentTheme === 'wave') color = '#22d3ee';
     if (isDevMode) color = '#ff4444';
 
-    // Criamos 45 partículas de ambiente dinâmicas com comportamento do tema
     for (let i = 0; i < 45; i++) {
         const p = document.createElement("div");
         p.className = "particle";
@@ -1858,7 +1939,6 @@ function initParticles() {
             p.style.animationName = 'rainFall';
             p.style.animationDuration = (Math.random() * 1.2 + 0.8)  + 's';
         } else if (currentTheme === 'natureza') {
-            // Raios radioativos
             p.style.borderRadius = '50%';
             p.style.width = '3px';
             p.style.height = '3px';
@@ -1887,7 +1967,7 @@ function initStation() {
     loginScreen.style.display = "flex";
     loginScreen.style.opacity = "1";
 
-    // Recupera o tema guardado anteriormente no navegador do utilizador
+    // Recupera o tema guardado no navegador do utilizador de forma persistente
     const savedTheme = localStorage.getItem('astryxz_preferred_theme');
     if (savedTheme) {
         currentTheme = savedTheme;
@@ -1925,10 +2005,9 @@ function handleLogin() {
     setTimeout(() => { 
         loginScreen.style.display = "none"; 
         
-        // Aplica o tema que o utilizador escolheu previamente após o login
+        // Aplica o tema persistente do utilizador
         changeTheme(currentTheme);
 
-        // Dispara requisição do tempo de forma segura
         fetchWeather();
         updateClock();
     }, 500);
@@ -1999,7 +2078,6 @@ function parseMarkdown(text) {
     return html;
 }
 
-// Função para escapar caracteres HTML prevenindo injeções maliciosas no chat
 function escapeHtml(text) {
     const map = {
         '&': '&amp;',
@@ -2027,6 +2105,75 @@ function transitionToChatMode() {
     }
 }
 
+/* --- SISTEMA DE PESQUISA POR VOZ (WEB SPEECH API) --- */
+function activateVoiceSearch() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert("A API de Reconhecimento de Voz não é suportada neste navegador. Tente utilizar o Google Chrome.");
+        return;
+    }
+
+    const voiceOverlay = document.getElementById("voiceOverlay");
+    const voiceStatus = document.getElementById("voiceStatus");
+    const voiceTranscript = document.getElementById("voiceTranscript");
+
+    voiceOverlay.style.display = "flex";
+    setTimeout(() => {
+        voiceOverlay.classList.add("active");
+    }, 10);
+
+    recognition = new SpeechRecognition();
+    recognition.lang = 'pt-PT';
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+        voiceStatus.innerText = "A escutar...";
+        voiceTranscript.innerText = "Diga alguma coisa...";
+    };
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        voiceTranscript.innerText = transcript;
+    };
+
+    recognition.onerror = (event) => {
+        console.error("Erro no reconhecimento de voz:", event.error);
+        voiceStatus.innerText = "Erro!";
+        voiceTranscript.innerText = "Não conseguimos entender a sua voz.";
+    };
+
+    recognition.onend = () => {
+        const finalOutput = voiceTranscript.innerText.trim();
+        if (finalOutput && finalOutput !== "Diga alguma coisa..." && finalOutput !== "Não conseguimos entender a sua voz.") {
+            input.value = finalOutput;
+            autoGrow(input);
+            setTimeout(() => {
+                deactivateVoiceSearch();
+                run(); 
+            }, 800);
+        } else {
+            setTimeout(() => {
+                deactivateVoiceSearch();
+            }, 1500);
+        }
+    };
+
+    recognition.start();
+}
+
+function deactivateVoiceSearch() {
+    const voiceOverlay = document.getElementById("voiceOverlay");
+    if (recognition) {
+        recognition.abort();
+        recognition = null;
+    }
+    voiceOverlay.classList.remove("active");
+    setTimeout(() => {
+        voiceOverlay.style.display = "none";
+    }, 500);
+}
+
 function addMessage(text, type, imgData = ""){
     const container = document.createElement("div");
     container.className = "msg-container " + (type === "user" ? "user-container" : "");
@@ -2034,7 +2181,6 @@ function addMessage(text, type, imgData = ""){
     if(type === "ai") {
         const avatar = document.createElement("div");
         avatar.className = "avatar ai-avatar";
-        // Letra A representando Astryxz
         avatar.innerText = "A";
         container.appendChild(avatar);
     }
@@ -2051,7 +2197,6 @@ function addMessage(text, type, imgData = ""){
     
     if(text) {
         const p = document.createElement("p");
-        // O texto do utilizador é sanitizado com escapeHtml antes do markdown
         p.innerHTML = type === "user" ? parseMarkdown(escapeHtml(text)) : parseMarkdown(text);
         div.appendChild(p);
     }
@@ -2059,7 +2204,6 @@ function addMessage(text, type, imgData = ""){
     container.appendChild(div);
     chat.appendChild(container);
     
-    // Rola de forma suave para as novas mensagens
     setTimeout(() => {
         chatScrollWrapper.scrollTo({
             top: chatScrollWrapper.scrollHeight,
@@ -2070,11 +2214,64 @@ function addMessage(text, type, imgData = ""){
     triggerMathRender();
 }
 
+/* --- EXIBIÇÃO DE DIGITAÇÃO FLUIDA PARA A RESPOSTA DA IA --- */
 async function typeMessage(text){
-    addMessage(text, "ai");
+    const container = document.createElement("div");
+    container.className = "msg-container";
+
+    const avatar = document.createElement("div");
+    avatar.className = "avatar ai-avatar";
+    avatar.innerText = "A";
+    container.appendChild(avatar);
+
+    const div = document.createElement("div");
+    div.className = "msg ai typing-cursor";
+    
+    const p = document.createElement("p");
+    div.appendChild(p);
+    container.appendChild(div);
+    chat.appendChild(container);
+
+    let parsedFullHtml = parseMarkdown(text);
+    
+    let currentLength = 0;
+    let isInsideTag = false;
+    let accumulatedHtml = "";
+
+    return new Promise((resolve) => {
+        function typeChar() {
+            if (currentLength < parsedFullHtml.length) {
+                const char = parsedFullHtml.charAt(currentLength);
+                
+                if (char === '<') {
+                    isInsideTag = true;
+                }
+                
+                accumulatedHtml += char;
+                
+                if (char === '>') {
+                    isInsideTag = false;
+                }
+                
+                currentLength++;
+
+                if (isInsideTag) {
+                    typeChar(); 
+                } else {
+                    p.innerHTML = accumulatedHtml;
+                    chatScrollWrapper.scrollTop = chatScrollWrapper.scrollHeight;
+                    setTimeout(typeChar, 8); 
+                }
+            } else {
+                div.classList.remove("typing-cursor"); 
+                triggerMathRender();
+                resolve();
+            }
+        }
+        typeChar();
+    });
 }
 
-// Força o scroll inteligente
 function showLoader(){
     const container = document.createElement("div");
     container.className = "msg-container";
@@ -2109,7 +2306,6 @@ async function askAI(message, imageBase64){
         const selectedModel = document.getElementById("modelSelect").value;
         const currentKey = getActiveApiKey();
         
-        // Constrói o novo conteúdo da mensagem do utilizador
         let userMessageContent = [];
         if (imageBase64) {
             if (message) {
@@ -2123,13 +2319,11 @@ async function askAI(message, imageBase64){
             userMessageContent = message;
         }
 
-        // Adiciona a nova mensagem do utilizador à lista de contexto histórico
         conversationContext.push({ role: "user", content: userMessageContent });
 
         const devSystemPrompt = `Você é o núcleo interno DEV_CORE do terminal 『 ✧ Astryxz ✧ 』. Respostas puramente cirúrgicas, técnicas e diretas com estilo hacker.`;
         const normalSystemPrompt = `Você é 『 ✧ Astryxz ✧ 』, uma inteligência artificial rápida, útil, limpa, amigável, educada e segura para todas as idades (inclusive menores de 18 anos). Organizada, prestativa e direta.`;
 
-        // Prepara as mensagens que serão enviadas (System Prompt + Histórico Completo)
         const requestMessages = [
             { role: "system", content: isDevMode ? devSystemPrompt : normalSystemPrompt },
             ...conversationContext
@@ -2149,7 +2343,6 @@ async function askAI(message, imageBase64){
         });
 
         if (!response.ok) {
-            // Remove a última mensagem enviada em caso de erro para evitar histórico corrompido
             conversationContext.pop();
             
             const errorData = await response.json();
@@ -2164,10 +2357,8 @@ async function askAI(message, imageBase64){
         const data = await response.json();
         const assistantResponse = data.choices?.[0]?.message?.content || "Sem resposta.";
 
-        // Guarda a resposta do assistente no histórico de contexto
         conversationContext.push({ role: "assistant", content: assistantResponse });
 
-        // Limita o histórico para as últimas 12 mensagens para economizar tokens sem perder o fio da conversa
         if (conversationContext.length > 12) {
             conversationContext = conversationContext.slice(conversationContext.length - 12);
         }
@@ -2175,7 +2366,6 @@ async function askAI(message, imageBase64){
         return assistantResponse;
     } catch(error) { 
         console.error(error);
-        // Remove a mensagem em caso de falha de conexão física
         if (conversationContext.length > 0 && conversationContext[conversationContext.length - 1].role === "user") {
             conversationContext.pop();
         }
@@ -2188,8 +2378,7 @@ async function run(){
     const imageToSend = selectedImageBase64; 
     if(!text && !imageToSend) return;
 
-    // Deteta o tema com base no texto enviado antes de processar
-    checkTextForTheme(text, true); // Indica que é o utilizador para fixar o tema
+    checkTextForTheme(text, true); 
 
     transitionToChatMode();
     addMessage(text, "user", imageToSend);
@@ -2202,8 +2391,7 @@ async function run(){
     const aiResponse = await askAI(text, imageToSend);
     removeLoader();
     
-    // Deteta o tema também com base na resposta da IA
-    checkTextForTheme(aiResponse, false); // Indica que é a IA, logo não substitui se o utilizador já escolheu
+    checkTextForTheme(aiResponse, false); 
     
     await typeMessage(aiResponse);
 
@@ -2224,7 +2412,6 @@ function renderHistory(){
             addMessage(item.userInput, "user");
             addMessage(item.aiOutput, "ai");
             
-            // Sincroniza a memória local com a conversa clicada para o utilizador continuar daí
             conversationContext = [
                 { role: "user", content: item.userInput },
                 { role: "assistant", content: item.aiOutput }
@@ -2243,8 +2430,8 @@ function clearChat(){
     welcomeScreen.style.opacity = "1";
     bottomContainer.classList.add("centered");
     isFirstMessage = true;
-    conversationContext = []; // Limpa toda a memória ativa
-    userMatchedTheme = false; // Reset ao bloqueador de temas do utilizador
+    conversationContext = []; 
+    userMatchedTheme = false; 
     resetFreeModeBackground();
     closeSidebar();
 }
